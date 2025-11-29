@@ -3,6 +3,7 @@ import { isAdmin } from '../utils/auth';
 import config from '../config.json';
 import orderService from '../services/orderService';
 import { formatOrder } from '../utils/formatter';
+import { t } from '../utils/i18n';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,7 +15,7 @@ module.exports = {
                 .setRequired(false)),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
-            await interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
+            await interaction.reply({ content: t('common.permission_denied'), ephemeral: true });
             return;
         }
 
@@ -24,19 +25,19 @@ module.exports = {
         if (targetUser) {
             const userOrder = allOrders[targetUser.id];
             if (!userOrder || !userOrder.items || Object.keys(userOrder.items).length === 0) {
-                await interaction.reply(`User ${targetUser.username} has no active orders.`);
+                await interaction.reply(t('commands.orders.no_active_user', { username: targetUser.username }));
                 return;
             }
 
-            const reply = formatOrder(userOrder, `Orders for ${targetUser.username}`);
+            const reply = formatOrder(userOrder, t('commands.orders.header_user', { username: targetUser.username }));
             await interaction.reply(reply);
         } else {
             if (Object.keys(allOrders).length === 0) {
-                await interaction.reply('No active orders found.');
+                await interaction.reply(t('commands.orders.no_active_global'));
                 return;
             }
 
-            let reply = '**All Orders:**\n';
+            let reply = t('commands.orders.header_global') + '\n';
             let globalTotal = 0;
 
             for (const [userId, userOrder] of Object.entries(allOrders)) {
@@ -63,9 +64,10 @@ module.exports = {
                 reply += userLine + '\n';
             }
 
-            reply += `\n**Grand Total:** ${config.currency}${globalTotal.toFixed(2)}`;
+            reply += '\n' + t('commands.orders.grand_total', { currency: config.currency, total: globalTotal.toFixed(2) });
             await interaction.reply(reply);
         }
     },
 };
+
 

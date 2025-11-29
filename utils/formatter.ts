@@ -1,4 +1,5 @@
-const config = require('../config.json');
+import config from '../config.json';
+import { t } from './i18n';
 
 interface Batch {
     price: number;
@@ -9,7 +10,7 @@ interface OrderItems {
     [productName: string]: Batch[];
 }
 
-interface UserOrder {
+export interface UserOrder {
     items: OrderItems;
     status: string;
     lastChange: string | number | Date;
@@ -23,7 +24,7 @@ export function formatOrderItems(items: OrderItems): { text: string, total: numb
     let total = 0;
 
     if (!items || Object.keys(items).length === 0) {
-        return { text: 'No items.\n', total: 0 };
+        return { text: t('formatter.no_items') + '\n', total: 0 };
     }
 
     for (const [product, batches] of Object.entries(items)) {
@@ -36,7 +37,7 @@ export function formatOrderItems(items: OrderItems): { text: string, total: numb
         }
 
         total += productTotal;
-        text += `- **${product}**: ${productQuantity} (${config.currency}${productTotal.toFixed(2)})\n`;
+        text += t('formatter.item_line', { product, quantity: productQuantity, currency: config.currency, total: productTotal.toFixed(2) }) + '\n';
     }
 
     return { text, total };
@@ -47,15 +48,15 @@ export function formatOrderItems(items: OrderItems): { text: string, total: numb
  */
 export function formatOrder(userOrder: UserOrder, title: string): string {
     if (!userOrder || !userOrder.items || Object.keys(userOrder.items).length === 0) {
-        return `${title}\nNo active orders.`;
+        return t('formatter.no_active_orders', { title });
     }
 
     const lastChangeDate = new Date(userOrder.lastChange).toLocaleString();
     const { text, total } = formatOrderItems(userOrder.items);
 
-    let reply = `**${title}** (Status: **${userOrder.status}**, Last Updated: ${lastChangeDate}):\n`;
+    let reply = t('formatter.header', { title, status: userOrder.status, date: lastChangeDate }) + '\n';
     reply += text;
-    reply += `\n**Total:** ${config.currency}${total.toFixed(2)}`;
+    reply += '\n' + t('formatter.total', { currency: config.currency, total: total.toFixed(2) });
 
     return reply;
 }

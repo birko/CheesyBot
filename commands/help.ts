@@ -1,33 +1,28 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { isAdmin } from '../utils/auth';
+import { t } from '../utils/i18n';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')
-        .setDescription('List available commands'),
+        .setDescription('Show available commands'),
     async execute(interaction: ChatInputCommandInteraction) {
-        const isUserAdmin = isAdmin(interaction);
+        let reply = t('commands.help.header') + '\n';
+        reply += '`/list` - List available products\n';
+        reply += '`/order <product> [amount]` - Order products\n';
+        reply += '`/edit <product> [amount]` - Edit your order\n';
+        reply += '`/show` - Show your current orders\n';
 
-        let helpText = '**Available Commands:**\n\n';
-
-        helpText += '**User Commands:**\n';
-        helpText += '`/list`: List available products and prices\n';
-        helpText += '`/order <product> [amount]`: Order products (by name or index). Supports bulk.\n';
-        helpText += '`/edit <product> [amount]`: Set exact order total (by name or index). Supports bulk.\n';
-        helpText += '`/show`: Show your current orders and total\n';
-        helpText += '`/help`: Show this help message\n';
-
-        if (isUserAdmin) {
-            helpText += '\n**Admin Commands:**\n';
-            helpText += '`/orders [user]`: View orders (all or specific user)\n';
-            helpText += '`/add <name> [price]`: Add products. Supports bulk.\n';
-            helpText += '`/remove <name>`: Remove products (by name or index). Supports bulk.\n';
-            helpText += '`/update <product> [new_price]`: Update prices (by name or index). Supports bulk.\n';
-            helpText += '`/complete [product] [user] [amount]`: Complete orders. Supports bulk/all modes.\n';
-            helpText += '`/status <user> <status>`: Update order status (New, Processing, Ready, Completed).\n';
+        if (isAdmin(interaction)) {
+            reply += '\n' + t('commands.help.admin_header') + '\n';
+            reply += '`/add <name> [price]` - Add products\n';
+            reply += '`/remove <name>` - Remove products\n';
+            reply += '`/update <product> [new_price]` - Update product price\n';
+            reply += '`/orders [user]` - View orders\n';
+            reply += '`/complete [product] [user] [amount]` - Complete orders\n';
+            reply += '`/status <user> <status>` - Update order status\n';
         }
 
-        await interaction.reply(helpText);
+        await interaction.reply(reply);
     },
 };
-

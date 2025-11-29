@@ -1,0 +1,82 @@
+{
+    "common": {
+        "error": "Vyskytla sa chyba.",
+        "permission_denied": "Nemáš povolenie použiť tento príkaz.",
+        "unknown_error": "Neznáma chyba"
+    },
+    "formatter": {
+        "no_items": "Žiadne položky.",
+        "item_line": "- **{{product}}**: {{quantity}} ({{currency}}{{total}})",
+        "header": "**{{title}}** (Stav: **{{status}}**, Posledná zmena: {{date}}):",
+        "total": "**Celkom:** {{currency}}{{total}}",
+        "no_active_orders": "{{title}}\nŽiadne aktívne objednávky."
+    },
+    "commands": {
+        "list": {
+            "no_products": "Žiadne produkty k dispozícii.",
+            "header": "**Dostupné produkty:**",
+            "item_format": "{{index}}. **{{name}}** - {{currency}}{{price}}"
+        },
+        "order": {
+            "amount_positive": "Množstvo musí byť väčšie ako 0.",
+            "ordered_single": "Objednané {{amount}} x {{name}}.",
+            "admin_notification_single": "**Nová objednávka**: {{user}} objednal {{amount}} x {{name}}.",
+            "ordered_bulk_header": "**Objednané:**",
+            "failed_bulk_header": "**Zlyhalo:**",
+            "no_products_ordered": "Žiadne produkty neboli objednané. Skontroluj formát (Produkt:Množstvo, Produkt2:Množstvo2).",
+            "admin_notification_bulk": "**Hromadná objednávka**: {{user}} objednal:\n{{orders}}"
+        },
+        "edit": {
+            "amount_positive": "Množstvo musí byť väčšie alebo rovné 0.",
+            "edited_single": "Objednávka pre **{{name}}** aktualizovaná na {{amount}}.",
+            "admin_notification_single": "**Aktualizácia objednávky**: {{user}} zmenil {{name}} na {{amount}}.",
+            "edited_bulk_header": "**Aktualizované:**",
+            "no_products_edited": "Žiadne produkty neboli aktualizované. Skontroluj formát (Produkt:Množstvo, Produkt2:Množstvo2).",
+            "admin_notification_bulk": "**Hromadná aktualizácia**: {{user}} aktualizoval:\n{{updates}}"
+        },
+        "show": {
+            "no_active_orders": "Nemáš žiadne aktívne objednávky.",
+            "header": "Tvoje objednávky"
+        },
+        "help": {
+            "header": "**Dostupné príkazy:**",
+            "admin_header": "**Admin príkazy:**"
+        },
+        "add": {
+            "added_single": "Pridaný produkt **{{name}}** s cenou {{currency}}{{price}}.",
+            "added_bulk_header": "**Pridané:**",
+            "no_products_added": "Žiadne produkty neboli pridané. Skontroluj formát (Meno:Cena, Meno2:Cena2)."
+        },
+        "remove": {
+            "removed_single": "Odstránený produkt **{{name}}**.",
+            "removed_bulk_header": "**Odstránené:**",
+            "not_found": "Produkt \"{{input}}\" nenájdený."
+        },
+        "update": {
+            "updated_single": "Cena \"{{name}}\" aktualizovaná z {{currency}}{{oldPrice}} na {{currency}}{{newPrice}}.",
+            "updated_bulk_header": "**Ceny aktualizované:**",
+            "no_prices_updated": "Žiadne ceny neboli aktualizované. Skontroluj formát (Produkt:Cena, Produkt2:Cena2)."
+        },
+        "complete": {
+            "completed_all": "Všetky objednávky dokončené.",
+            "admin_notification_all": "**Dokončenie objednávok**: {{user}} dokončil VŠETKY objednávky.",
+            "completed_user": "Všetky objednávky pre {{target}} dokončené.",
+            "admin_notification_user": "**Dokončenie objednávok**: {{user}} dokončil všetky objednávky pre {{target}}.",
+            "completed_product_user": "Dokončené {{product}} pre {{target}}.",
+            "admin_notification_product_user": "**Dokončenie objednávok**: {{user}} dokončil {{product}} pre {{target}}.",
+            "completed_amount_product_user": "Dokončené {{amount}} x {{product}} pre {{target}}.",
+            "admin_notification_amount_product_user": "**Dokončenie objednávok**: {{user}} dokončil {{amount}} x {{product}} pre {{target}}."
+        },
+        "status": {
+            "updated": "Stav pre {{target}} zmenený na **{{status}}**.",
+            "admin_notification": "**Zmena stavu**: {{user}} zmenil stav pre {{target}} na **{{status}}**."
+        },
+        "orders": {
+            "no_active_user": "Užívateľ {{username}} nemá žiadne aktívne objednávky.",
+            "header_user": "Objednávky pre {{username}}",
+            "no_active_global": "Žiadne aktívne objednávky.",
+            "header_global": "**Všetky objednávky:**",
+            "grand_total": "**Celkový súčet:** {{currency}}{{total}}"
+        }
+    }
+}

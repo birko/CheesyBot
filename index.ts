@@ -31,7 +31,10 @@ if (fs.existsSync(commandsPath)) {
     }
 }
 
-client.once(Events.ClientReady, readyClient => {
+import i18next from './utils/i18n';
+
+client.once(Events.ClientReady, async readyClient => {
+    await i18next.init(); // Ensure i18n is loaded
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 });
 
@@ -58,4 +61,5 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.login(process.env.DISCORD_TOKEN);
+
 

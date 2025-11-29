@@ -1,0 +1,62 @@
+            "amount_positive": "Menge muss größer als 0 sein.",
+            "ordered_single": "{{amount}} x {{name}} bestellt.",
+            "admin_notification_single": "**Neue Bestellung**: {{user}} hat {{amount}} x {{name}} bestellt.",
+            "ordered_bulk_header": "**Bestellt:**",
+            "failed_bulk_header": "**Fehlgeschlagen:**",
+            "no_products_ordered": "Keine Produkte bestellt. Überprüfe das Format (Produkt:Menge, Produkt2:Menge2).",
+            "admin_notification_bulk": "**Sammelbestellung**: {{user}} hat bestellt:\n{{orders}}"
+        },
+        "edit": {
+            "amount_positive": "Menge muss größer oder gleich 0 sein.",
+            "edited_single": "Bestellung für **{{name}}** auf {{amount}} aktualisiert.",
+            "admin_notification_single": "**Bestelländerung**: {{user}} hat {{name}} auf {{amount}} geändert.",
+            "edited_bulk_header": "**Aktualisiert:**",
+            "no_products_edited": "Keine Produkte aktualisiert. Überprüfe das Format (Produkt:Menge, Produkt2:Menge2).",
+            "admin_notification_bulk": "**Sammeländerung**: {{user}} hat aktualisiert:\n{{updates}}"
+        },
+        "show": {
+            "no_active_orders": "Du hast keine aktiven Bestellungen.",
+            "header": "Deine Bestellungen"
+        },
+        "help": {
+            "header": "**Verfügbare Befehle:**",
+            "admin_header": "**Admin-Befehle:**"
+        },
+        "add": {
+            "added_single": "Produkt **{{name}}** mit Preis {{currency}}{{price}} hinzugefügt.",
+            "added_bulk_header": "**Hinzugefügt:**",
+            "no_products_added": "Keine Produkte hinzugefügt. Überprüfe das Format (Name:Preis, Name2:Preis2)."
+        },
+        "remove": {
+            "removed_single": "Produkt **{{name}}** entfernt.",
+            "removed_bulk_header": "**Entfernt:**",
+            "not_found": "Produkt \"{{input}}\" nicht gefunden."
+        },
+        "update": {
+            "updated_single": "Preis von \"{{name}}\" von {{currency}}{{oldPrice}} auf {{currency}}{{newPrice}} aktualisiert.",
+            "updated_bulk_header": "**Preise aktualisiert:**",
+            "no_prices_updated": "Keine Preise aktualisiert. Überprüfe das Format (Produkt:Preis, Produkt2:Preis2)."
+        },
+        "complete": {
+            "completed_all": "Alle Bestellungen abgeschlossen.",
+            "admin_notification_all": "**Bestellabschluss**: {{user}} hat ALLE Bestellungen abgeschlossen.",
+            "completed_user": "Alle Bestellungen für {{target}} abgeschlossen.",
+            "admin_notification_user": "**Bestellabschluss**: {{user}} hat alle Bestellungen für {{target}} abgeschlossen.",
+            "completed_product_user": "{{product}} für {{target}} abgeschlossen.",
+            "admin_notification_product_user": "**Bestellabschluss**: {{user}} hat {{product}} für {{target}} abgeschlossen.",
+            "completed_amount_product_user": "{{amount}} x {{product}} für {{target}} abgeschlossen.",
+            "admin_notification_amount_product_user": "**Bestellabschluss**: {{user}} hat {{amount}} x {{product}} für {{target}} abgeschlossen."
+        },
+        "status": {
+            "updated": "Status für {{target}} auf **{{status}}** aktualisiert.",
+            "admin_notification": "**Status-Update**: {{user}} hat den Status für {{target}} auf **{{status}}** gesetzt."
+        },
+        "orders": {
+            "no_active_user": "Benutzer {{username}} hat keine aktiven Bestellungen.",
+            "header_user": "Bestellungen für {{username}}",
+            "no_active_global": "Keine aktiven Bestellungen gefunden.",
+            "header_global": "**Alle Bestellungen:**",
+            "grand_total": "**Gesamtsumme:** {{currency}}{{total}}"
+        }
+    }
+}

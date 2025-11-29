@@ -1,0 +1,62 @@
+            "amount_positive": "Amount must be greater than 0.",
+            "ordered_single": "Ordered {{amount}} x {{name}}.",
+            "admin_notification_single": "**New Order**: {{user}} ordered {{amount}} x {{name}}.",
+            "ordered_bulk_header": "**Ordered:**",
+            "failed_bulk_header": "**Failed:**",
+            "no_products_ordered": "No products ordered. Check format (Product:Amount, Product2:Amount2).",
+            "admin_notification_bulk": "**Bulk Order**: {{user}} ordered:\n{{orders}}"
+        },
+        "edit": {
+            "amount_positive": "Amount must be greater than or equal to 0.",
+            "edited_single": "Updated order for **{{name}}** to {{amount}}.",
+            "admin_notification_single": "**Order Update**: {{user}} updated {{name}} to {{amount}}.",
+            "edited_bulk_header": "**Updated:**",
+            "no_products_edited": "No products updated. Check format (Product:Amount, Product2:Amount2).",
+            "admin_notification_bulk": "**Bulk Update**: {{user}} updated:\n{{updates}}"
+        },
+        "show": {
+            "no_active_orders": "You have no active orders.",
+            "header": "Your Orders"
+        },
+        "help": {
+            "header": "**Available Commands:**",
+            "admin_header": "**Admin Commands:**"
+        },
+        "add": {
+            "added_single": "Added product **{{name}}** with price {{currency}}{{price}}.",
+            "added_bulk_header": "**Added:**",
+            "no_products_added": "No products added. Check format (Name:Price, Name2:Price2)."
+        },
+        "remove": {
+            "removed_single": "Removed product **{{name}}**.",
+            "removed_bulk_header": "**Removed:**",
+            "not_found": "Product \"{{input}}\" not found."
+        },
+        "update": {
+            "updated_single": "Updated price of \"{{name}}\" from {{currency}}{{oldPrice}} to {{currency}}{{newPrice}}.",
+            "updated_bulk_header": "**Updated Prices:**",
+            "no_prices_updated": "No prices updated. Check format (Product:Price, Product2:Price2)."
+        },
+        "complete": {
+            "completed_all": "Completed all orders.",
+            "admin_notification_all": "**Order Completion**: {{user}} completed ALL orders.",
+            "completed_user": "Completed all orders for {{target}}.",
+            "admin_notification_user": "**Order Completion**: {{user}} completed all orders for {{target}}.",
+            "completed_product_user": "Completed {{product}} for {{target}}.",
+            "admin_notification_product_user": "**Order Completion**: {{user}} completed {{product}} for {{target}}.",
+            "completed_amount_product_user": "Completed {{amount}} x {{product}} for {{target}}.",
+            "admin_notification_amount_product_user": "**Order Completion**: {{user}} completed {{amount}} x {{product}} for {{target}}."
+        },
+        "status": {
+            "updated": "Updated status for {{target}} to **{{status}}**.",
+            "admin_notification": "**Status Update**: {{user}} set status for {{target}} to **{{status}}**."
+        },
+        "orders": {
+            "no_active_user": "User {{username}} has no active orders.",
+            "header_user": "Orders for {{username}}",
+            "no_active_global": "No active orders found.",
+            "header_global": "**All Orders:**",
+            "grand_total": "**Grand Total:** {{currency}}{{total}}"
+        }
+    }
+}

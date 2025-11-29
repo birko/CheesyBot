@@ -16,7 +16,9 @@
   "type": "commonjs",
   "dependencies": {
     "discord.js": "^14.25.1",
-    "dotenv": "^17.2.3"
+    "dotenv": "^17.2.3",
+    "i18next": "^25.6.3",
+    "i18next-fs-backend": "^2.6.1"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

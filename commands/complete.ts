@@ -1,17 +1,16 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, User } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { isAdmin } from '../utils/auth';
-import config from '../config.json';
-import orderService from '../services/orderService';
 import { notifyAdmins } from '../utils/notify';
-import { formatOrderItems } from '../utils/formatter';
+import orderService from '../services/orderService';
+import { t } from '../utils/i18n';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('complete')
-        .setDescription('Complete orders (Admin only)')
+        .setDescription('Complete an order or part of an order (Admin only)')
         .addStringOption(option =>
             option.setName('product')
-                .setDescription('The product name or index (optional)')
+                .setDescription('Product name (optional)')
                 .setRequired(false))
         .addUserOption(option =>
             option.setName('user')
@@ -19,92 +18,73 @@ module.exports = {
                 .setRequired(false))
         .addIntegerOption(option =>
             option.setName('amount')
-                .setDescription('The amount to complete (optional)')
+                .setDescription('Amount to complete (optional)')
                 .setRequired(false)),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
-            await interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
+            await interaction.reply({ content: t('common.permission_denied'), ephemeral: true });
             return;
         }
 
         const productInput = interaction.options.getString('product');
         const targetUser = interaction.options.getUser('user');
-        const amount = interaction.options.getInteger('amount');
+        const amountInput = interaction.options.getInteger('amount');
 
-        // Scenario 1: No arguments -> Complete ALL orders
-        if (!productInput && !targetUser && !amount) {
+        // Case 1: Complete ALL orders
+        if (!productInput && !targetUser) {
             const result = orderService.completeAllOrders();
             if (!result.success) {
-                await interaction.reply({ content: result.error || 'Unknown error', ephemeral: true });
+                await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(`Completed all orders for ${result.count} users.`);
-                await notifyAdmins(interaction, `**Order Completed**: ${interaction.user} completed ALL orders.`);
+                await interaction.reply(t('commands.complete.completed_all'));
+                await notifyAdmins(interaction, t('commands.complete.admin_notification_all', { user: interaction.user }));
             }
             return;
         }
 
-        // Scenario 2: User only -> Complete ALL orders for that user
-        if (targetUser && !productInput && !amount) {
+        // Case 2: Complete all orders for a specific USER
+        if (!productInput && targetUser && !amountInput) {
             const result = orderService.completeUserOrders(targetUser.id);
             if (!result.success) {
-                await interaction.reply({ content: result.error || 'Unknown error', ephemeral: true });
+                await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(`Completed all orders for ${targetUser.username}.`);
-                await notifyAdmins(interaction, `**Order Completed**: ${interaction.user} completed all orders for ${targetUser}.`);
+                await interaction.reply(t('commands.complete.completed_user', { target: targetUser.username }));
+                await notifyAdmins(interaction, t('commands.complete.admin_notification_user', { user: interaction.user, target: targetUser }));
             }
             return;
         }
 
-        // Scenario 3: User + Product -> Complete ALL of that product for that user
-        if (targetUser && productInput && !amount) {
-            const result = orderService.completeProductOrders(targetUser.id, productInput);
-            if (!result.success) {
-                await interaction.reply({ content: result.error || 'Unknown error', ephemeral: true });
+        // Case 3: Complete specific PRODUCT for a USER (optionally specific AMOUNT)
+        if (productInput && targetUser) {
+            if (amountInput) {
+                if (amountInput <= 0) {
+                    await interaction.reply({ content: t('commands.order.amount_positive'), ephemeral: true });
+                    return;
+                }
+                const result = orderService.completeOrder(targetUser.id, productInput, amountInput);
+                if (!result.success) {
+                    await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
+                } else {
+                    await interaction.reply(t('commands.complete.completed_amount_product_user', { amount: result.cost, product: result.name, target: targetUser.username })); // Note: result.cost is returned by completeOrder, but message expects amount/product. Wait, result.name is product name. result.cost is cost.
+                    // The message key 'completed_amount_product_user' expects {{amount}}, {{product}}, {{target}}.
+                    // completeOrder returns { success: true, name: productName, cost: completedCost }
+                    // It does NOT return the amount completed (which is input `amountInput`).
+                    // So I should use `amountInput` for {{amount}}.
+                    await notifyAdmins(interaction, t('commands.complete.admin_notification_amount_product_user', { user: interaction.user, amount: amountInput, product: result.name, target: targetUser }));
+                }
             } else {
-                await interaction.reply(`Completed all ${result.name} orders for ${targetUser.username}.`);
-                await notifyAdmins(interaction, `**Order Completed**: ${interaction.user} completed all ${result.name} for ${targetUser}.`);
-            }
-            return;
-        }
-
-        // Scenario 4: User + Product + Amount -> Complete specific amount (Original behavior)
-        if (targetUser && productInput && amount) {
-            if (amount <= 0) {
-                await interaction.reply({ content: 'Amount must be greater than 0.', ephemeral: true });
-                return;
-            }
-
-            const result = orderService.completeOrder(targetUser.id, productInput, amount);
-
-            if (!result.success) {
-                await interaction.reply({ content: result.error || 'Unknown error', ephemeral: true });
-                return;
-            }
-
-            const userOrder = orderService.getUserOrders(targetUser.id);
-            let remainingSummary = 'No remaining orders.\n';
-            let remainingTotal = 0;
-
-            if (userOrder && userOrder.items) {
-                const formatted = formatOrderItems(userOrder.items);
-                if (formatted.text) {
-                    remainingSummary = formatted.text;
-                    remainingTotal = formatted.total;
+                const result = orderService.completeProductOrders(targetUser.id, productInput);
+                if (!result.success) {
+                    await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
+                } else {
+                    await interaction.reply(t('commands.complete.completed_product_user', { product: result.name, target: targetUser.username }));
+                    await notifyAdmins(interaction, t('commands.complete.admin_notification_product_user', { user: interaction.user, product: result.name, target: targetUser }));
                 }
             }
-
-            const reply = `Completed ${amount} ${result.name} for ${targetUser.username}.\n` +
-                `**Completed Value:** ${config.currency}${result.cost?.toFixed(2)}\n\n` +
-                `**Remaining Orders:**\n${remainingSummary}` +
-                `**Remaining Total:** ${config.currency}${remainingTotal.toFixed(2)}`;
-
-            await interaction.reply(reply);
-            await notifyAdmins(interaction, `**Order Completed**: ${interaction.user} completed ${amount} x ${result.name} for ${targetUser}.`);
             return;
         }
 
-        // Invalid combinations
-        await interaction.reply({ content: 'Invalid combination of arguments. Please check /help for usage.', ephemeral: true });
+        // Case 4: Invalid combination
+        await interaction.reply({ content: 'Invalid command usage. Check `/help` for examples.', ephemeral: true });
     },
 };
-

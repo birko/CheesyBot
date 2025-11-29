@@ -3,40 +3,41 @@ import { isAdmin } from '../utils/auth';
 import config from '../config.json';
 import productService from '../services/productService';
 import { parseBulkInput } from '../utils/parser';
+import { t } from '../utils/i18n';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('add')
-        .setDescription('Add a product or multiple products (Admin only)')
+        .setDescription('Add a new product or multiple products (Admin only)')
         .addStringOption(option =>
             option.setName('name')
                 .setDescription('Product name OR list "Name:Price, Name2:Price2"')
                 .setRequired(true))
         .addNumberOption(option =>
             option.setName('price')
-                .setDescription('The unit price (optional for bulk add)')
+                .setDescription('The price of the product (optional for bulk add)')
                 .setRequired(false)),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
-            await interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
+            await interaction.reply({ content: t('common.permission_denied'), ephemeral: true });
             return;
         }
 
         const nameInput = interaction.options.getString('name', true);
         const priceInput = interaction.options.getNumber('price');
 
-        // Single Product Mode
+        // Single Add Mode
         if (priceInput !== null) {
             const result = productService.addProduct(nameInput, priceInput);
             if (!result.success) {
-                await interaction.reply({ content: result.error || 'Unknown error', ephemeral: true });
+                await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(`Product "${result.name}" added with price ${config.currency}${result.price}.`);
+                await interaction.reply(t('commands.add.added_single', { name: result.name, currency: config.currency, price: result.price }));
             }
             return;
         }
 
-        // Bulk Mode
+        // Bulk Add Mode
         const { success, failed } = parseBulkInput(nameInput, productService.getAllProducts(), 'number');
         const added: string[] = [];
         const parsingFailed: string[] = [...failed];
@@ -48,18 +49,17 @@ module.exports = {
             }
             const result = productService.addProduct(item.name, item.value);
             if (result.success) {
-                added.push(`${result.name} (${config.currency}${result.price})`);
+                added.push(`${result.name}: ${config.currency}${result.price}`);
             } else {
                 parsingFailed.push(`${item.name} (${result.error})`);
             }
         }
 
         let reply = '';
-        if (added.length > 0) reply += `**Added ${added.length} products:**\n${added.join('\n')}\n`;
-        if (parsingFailed.length > 0) reply += `**Failed to add:**\n${parsingFailed.join('\n')}\n`;
-        if (reply === '') reply = 'No products were added. Check your format (Name:Price, Name2:Price2).';
+        if (added.length > 0) reply += t('commands.add.added_bulk_header') + '\n' + added.join('\n') + '\n';
+        if (parsingFailed.length > 0) reply += t('commands.add.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
+        if (reply === '') reply = t('commands.add.no_products_added');
 
         await interaction.reply(reply);
     },
 };
-

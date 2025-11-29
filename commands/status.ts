@@ -2,6 +2,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { isAdmin } from '../utils/auth';
 import orderService from '../services/orderService';
 import { notifyAdmins } from '../utils/notify';
+import { t } from '../utils/i18n';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -23,7 +24,7 @@ module.exports = {
                 )),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
-            await interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
+            await interaction.reply({ content: t('common.permission_denied'), ephemeral: true });
             return;
         }
 
@@ -33,12 +34,13 @@ module.exports = {
         const result = orderService.updateStatus(targetUser.id, newStatus);
 
         if (!result.success) {
-            await interaction.reply({ content: result.error || 'Unknown error', ephemeral: true });
+            await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
             return;
         }
 
-        await interaction.reply(`Updated status for ${targetUser.username} to **${result.status}**.`);
-        await notifyAdmins(interaction, `**Status Update**: ${interaction.user} set status for ${targetUser} to **${result.status}**.`);
+        await interaction.reply(t('commands.status.updated', { target: targetUser.username, status: result.status }));
+        await notifyAdmins(interaction, t('commands.status.admin_notification', { user: interaction.user, target: targetUser, status: result.status }));
     },
 };
+
 
