@@ -25,6 +25,7 @@ A robust Discord bot for managing product orders with unified storage, historica
         CLIENT_ID=your_client_id
         GUILD_IDS=guild_id_1,guild_id_2  # Optional: Comma-separated list for specific guild deployment
         ```
+    -   Copy `config.template.json` to `config.json`
     -   Edit `config.json`:
         ```json
         {
