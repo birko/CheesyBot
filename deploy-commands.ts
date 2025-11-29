@@ -1,12 +1,14 @@
-const { REST, Routes } = require('discord.js');
-const fs = require('node:fs');
-const path = require('node:path');
-require('dotenv').config();
+import { REST, Routes } from 'discord.js';
+import fs from 'node:fs';
+import path from 'node:path';
+import dotenv from 'dotenv';
 
-const commands = [];
+dotenv.config();
+
+const commands: any[] = [];
 const commandsPath = path.join(__dirname, 'commands');
 if (fs.existsSync(commandsPath)) {
-    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.ts') || file.endsWith('.js'));
 
     for (const file of commandFiles) {
         const command = require(path.join(commandsPath, file));
@@ -18,7 +20,7 @@ if (fs.existsSync(commandsPath)) {
     }
 }
 
-const rest = new REST().setToken(process.env.DISCORD_TOKEN);
+const rest = new REST().setToken(process.env.DISCORD_TOKEN as string);
 
 (async () => {
     try {
@@ -31,9 +33,9 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
             for (const guildId of guildIds) {
                 try {
                     const data = await rest.put(
-                        Routes.applicationGuildCommands(process.env.CLIENT_ID, guildId),
+                        Routes.applicationGuildCommands(process.env.CLIENT_ID as string, guildId),
                         { body: commands },
-                    );
+                    ) as any[];
                     console.log(`Successfully reloaded ${data.length} application (/) commands for guild ${guildId}.`);
                 } catch (error) {
                     console.error(`Failed to deploy to guild ${guildId}:`, error);
@@ -42,9 +44,9 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
         } else {
             console.log('No GUILD_IDS found in .env, deploying globally.');
             const data = await rest.put(
-                Routes.applicationCommands(process.env.CLIENT_ID),
+                Routes.applicationCommands(process.env.CLIENT_ID as string),
                 { body: commands },
-            );
+            ) as any[];
             console.log(`Successfully reloaded ${data.length} application (/) commands globally.`);
         }
 
@@ -52,3 +54,4 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
         console.error(error);
     }
 })();
+

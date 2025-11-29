@@ -1,11 +1,11 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { isAdmin } = require('../utils/auth');
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { isAdmin } from '../utils/auth';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')
         .setDescription('List available commands'),
-    async execute(interaction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         const isUserAdmin = isAdmin(interaction);
 
         let helpText = '**Available Commands:**\n\n';
@@ -30,3 +30,4 @@ module.exports = {
         await interaction.reply(helpText);
     },
 };
+

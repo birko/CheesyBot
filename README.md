@@ -46,12 +46,20 @@ A robust Discord bot for managing product orders with unified storage, historica
     -   If `GUILD_IDS` is set in `.env`, commands deploy immediately to those servers.
     -   If `GUILD_IDS` is empty, commands deploy globally (may take time to propagate).
     ```bash
-    node deploy-commands.js
+    npm run deploy
     ```
 
-2.  **Start the Bot**:
+2.  **Development**:
+    Run the bot in development mode (auto-restarts on changes):
     ```bash
-    node index.js
+    npm run dev
+    ```
+
+3.  **Production**:
+    Build the project and run the compiled code:
+    ```bash
+    npm run build
+    npm run start
     ```
 
 ## Commands

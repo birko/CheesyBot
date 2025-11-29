@@ -1,7 +1,16 @@
-const fs = require('node:fs');
-const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-require('dotenv').config();
+import fs from 'node:fs';
+import path from 'node:path';
+import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+// Extend Client to include commands
+declare module 'discord.js' {
+    interface Client {
+        commands: Collection<string, any>;
+    }
+}
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -9,7 +18,7 @@ client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
 // Check if commands directory exists before reading
 if (fs.existsSync(commandsPath)) {
-    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.ts') || file.endsWith('.js'));
 
     for (const file of commandFiles) {
         const filePath = path.join(commandsPath, file);
@@ -49,3 +58,4 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.login(process.env.DISCORD_TOKEN);
+

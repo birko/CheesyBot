@@ -1,8 +1,8 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { isAdmin } = require('../utils/auth');
-const config = require('../config.json');
-const orderService = require('../services/orderService');
-const { formatOrder } = require('../utils/formatter');
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { isAdmin } from '../utils/auth';
+import config from '../config.json';
+import orderService from '../services/orderService';
+import { formatOrder } from '../utils/formatter';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,7 +12,7 @@ module.exports = {
             option.setName('user')
                 .setDescription('The user to view orders for')
                 .setRequired(false)),
-    async execute(interaction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
             await interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
             return;
@@ -44,7 +44,7 @@ module.exports = {
 
                 let userTotal = 0;
                 let userLine = `<@${userId}> [${userOrder.status}]: `;
-                const products = [];
+                const products: string[] = [];
 
                 for (const [product, batches] of Object.entries(userOrder.items)) {
                     let productTotal = 0;
@@ -68,3 +68,4 @@ module.exports = {
         }
     },
 };
+

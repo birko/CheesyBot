@@ -1,8 +1,9 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { notifyAdmins } = require('../utils/notify');
-const orderService = require('../services/orderService');
-const productService = require('../services/productService');
-const { parseBulkInput } = require('../utils/parser');
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { notifyAdmins } from '../utils/notify';
+import orderService from '../services/orderService';
+import productService from '../services/productService';
+import { parseBulkInput } from '../utils/parser';
+import config from '../config.json';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,8 +17,8 @@ module.exports = {
             option.setName('amount')
                 .setDescription('The amount to order (optional for bulk order)')
                 .setRequired(false)),
-    async execute(interaction) {
-        const productInput = interaction.options.getString('product');
+    async execute(interaction: ChatInputCommandInteraction) {
+        const productInput = interaction.options.getString('product', true);
         const amountInput = interaction.options.getInteger('amount');
         const userId = interaction.user.id;
 
@@ -30,7 +31,7 @@ module.exports = {
 
             const result = orderService.addOrder(userId, productInput, amountInput);
             if (!result.success) {
-                await interaction.reply({ content: result.error, ephemeral: true });
+                await interaction.reply({ content: result.error || 'Unknown error', ephemeral: true });
             } else {
                 await interaction.reply(`Ordered ${result.amount} x ${result.name}.`);
                 await notifyAdmins(interaction, `**New Order**: ${interaction.user} ordered ${result.amount} x ${result.name}.`);
@@ -40,11 +41,11 @@ module.exports = {
 
         // Bulk Order Mode
         const { success, failed } = parseBulkInput(productInput, productService.getAllProducts(), 'integer');
-        const ordered = [];
-        const parsingFailed = [...failed];
+        const ordered: string[] = [];
+        const parsingFailed: string[] = [...failed];
 
         for (const item of success) {
-            if (item.value <= 0) {
+            if (item.value === null || item.value <= 0) {
                 parsingFailed.push(`${item.name} (Amount must be > 0)`);
                 continue;
             }
@@ -68,3 +69,4 @@ module.exports = {
         }
     },
 };
+

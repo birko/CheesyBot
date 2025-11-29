@@ -1,24 +1,25 @@
-const { resolveProduct } = require('./product');
+import { resolveProduct } from './product';
+
+interface ParsedItem {
+    name: string;
+    value: number | null;
+    original: string;
+}
 
 /**
  * Parses a bulk input string into a list of items.
  * Supported formats:
  * - "Item1:Value1, Item2:Value2" (for Key-Value pairs)
  * - "Item1, Item2" (for simple lists)
- * 
- * @param {string} inputString The raw input string from the user.
- * @param {object} products The products object for resolution.
- * @param {string} valueType 'number' (float), 'integer', or 'none' (for simple lists).
- * @returns {object} { success: [], failed: [] }
  */
-function parseBulkInput(inputString, products, valueType = 'none') {
+export function parseBulkInput(inputString: string, products: Record<string, any>, valueType: 'number' | 'integer' | 'none' = 'none'): { success: ParsedItem[], failed: string[] } {
     const items = inputString.split(',').map(item => item.trim());
-    const success = [];
-    const failed = [];
+    const success: ParsedItem[] = [];
+    const failed: string[] = [];
 
     for (const item of items) {
         let nameRaw = item;
-        let value = null;
+        let value: number | null = null;
 
         if (valueType !== 'none') {
             const parts = item.split(':');
@@ -61,4 +62,3 @@ function parseBulkInput(inputString, products, valueType = 'none') {
     return { success, failed };
 }
 
-module.exports = { parseBulkInput };

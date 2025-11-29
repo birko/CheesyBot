@@ -1,11 +1,24 @@
 const config = require('../config.json');
 
+interface Batch {
+    price: number;
+    quantity: number;
+}
+
+interface OrderItems {
+    [productName: string]: Batch[];
+}
+
+interface UserOrder {
+    items: OrderItems;
+    status: string;
+    lastChange: string | number | Date;
+}
+
 /**
  * Formats the items of an order into a list string and calculates the total.
- * @param {Object} items - The items object from the user order.
- * @returns {Object} { text: string, total: number }
  */
-function formatOrderItems(items) {
+export function formatOrderItems(items: OrderItems): { text: string, total: number } {
     let text = '';
     let total = 0;
 
@@ -31,11 +44,8 @@ function formatOrderItems(items) {
 
 /**
  * Formats a full order display with header, status, items, and total.
- * @param {Object} userOrder - The full user order object.
- * @param {string} title - The title for the order display (e.g., "Your Orders").
- * @returns {string} The formatted message string.
  */
-function formatOrder(userOrder, title) {
+export function formatOrder(userOrder: UserOrder, title: string): string {
     if (!userOrder || !userOrder.items || Object.keys(userOrder.items).length === 0) {
         return `${title}\nNo active orders.`;
     }
@@ -50,7 +60,3 @@ function formatOrder(userOrder, title) {
     return reply;
 }
 
-module.exports = {
-    formatOrderItems,
-    formatOrder
-};

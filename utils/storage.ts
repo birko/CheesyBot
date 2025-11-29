@@ -1,10 +1,15 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 const dataPath = path.join(__dirname, '../data.json');
 
+export interface Data {
+    products: Record<string, any>;
+    orders: Record<string, any>;
+}
+
 // Global storage (not per-guild)
-function loadData() {
+export function loadData(): Data {
     if (!fs.existsSync(dataPath)) {
         return { products: {}, orders: {} };
     }
@@ -17,7 +22,7 @@ function loadData() {
     }
 }
 
-function saveData(data) {
+export function saveData(data: Data): void {
     try {
         fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
     } catch (error) {
@@ -25,4 +30,3 @@ function saveData(data) {
     }
 }
 
-module.exports = { loadData, saveData };

@@ -1,4 +1,4 @@
-function resolveProduct(products, input) {
+export function resolveProduct(products: Record<string, any>, input: string): string | null {
     // Check if input is a direct name match
     if (products[input]) {
         return input;
@@ -16,4 +16,3 @@ function resolveProduct(products, input) {
     return null;
 }
 
-module.exports = { resolveProduct };

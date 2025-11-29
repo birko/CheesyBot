@@ -1,12 +1,12 @@
-const { SlashCommandBuilder } = require('discord.js');
-const config = require('../config.json');
-const productService = require('../services/productService');
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import config from '../config.json';
+import productService from '../services/productService';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('list')
         .setDescription('List all available products'),
-    async execute(interaction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         const products = productService.getAllProducts();
 
         if (Object.keys(products).length === 0) {
@@ -24,3 +24,4 @@ module.exports = {
         await interaction.reply(reply);
     },
 };
+

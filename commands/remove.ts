@@ -1,7 +1,7 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { isAdmin } = require('../utils/auth');
-const productService = require('../services/productService');
-const { parseBulkInput } = require('../utils/parser');
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { isAdmin } from '../utils/auth';
+import productService from '../services/productService';
+import { parseBulkInput } from '../utils/parser';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,13 +11,13 @@ module.exports = {
             option.setName('name')
                 .setDescription('Product name OR list "Product1, Product2"')
                 .setRequired(true)),
-    async execute(interaction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
             await interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
             return;
         }
 
-        const productInput = interaction.options.getString('name');
+        const productInput = interaction.options.getString('name', true);
 
         // Try single removal first (to handle names with commas if we supported them, but mainly for simplicity)
         // Actually, let's just use the parser for everything to be consistent.
@@ -32,8 +32,8 @@ module.exports = {
         // If we have [Apple, Banana] (from indices 1, 2), we can safely remove them by name.
         // The parser logic I wrote calls `resolveProduct`.
 
-        const removed = [];
-        const removalFailed = [...failed];
+        const removed: string[] = [];
+        const removalFailed: string[] = [...failed];
 
         // Unique names to avoid double attempts
         const uniqueNames = [...new Set(success.map(i => i.name))];
@@ -41,7 +41,7 @@ module.exports = {
         for (const name of uniqueNames) {
             const result = productService.removeProduct(name);
             if (result.success) {
-                removed.push(result.name);
+                removed.push(result.name || name);
             } else {
                 removalFailed.push(`${name} (${result.error})`);
             }
@@ -55,3 +55,4 @@ module.exports = {
         await interaction.reply(reply);
     },
 };
+

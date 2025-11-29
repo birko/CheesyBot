@@ -1,8 +1,8 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { notifyAdmins } = require('../utils/notify');
-const orderService = require('../services/orderService');
-const productService = require('../services/productService');
-const { parseBulkInput } = require('../utils/parser');
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { notifyAdmins } from '../utils/notify';
+import orderService from '../services/orderService';
+import productService from '../services/productService';
+import { parseBulkInput } from '../utils/parser';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,8 +16,8 @@ module.exports = {
             option.setName('amount')
                 .setDescription('The new total amount (optional for bulk edit)')
                 .setRequired(false)),
-    async execute(interaction) {
-        const productInput = interaction.options.getString('product');
+    async execute(interaction: ChatInputCommandInteraction) {
+        const productInput = interaction.options.getString('product', true);
         const amountInput = interaction.options.getInteger('amount');
         const userId = interaction.user.id;
 
@@ -25,14 +25,14 @@ module.exports = {
         if (amountInput !== null) {
             const result = orderService.editOrder(userId, productInput, amountInput);
             if (!result.success) {
-                await interaction.reply({ content: result.error, ephemeral: true });
+                await interaction.reply({ content: result.error || 'Unknown error', ephemeral: true });
                 return;
             }
 
             let msg = '';
             if (result.action === 'unchanged') msg = `Order for ${result.name} is already ${result.quantity}.`;
             else if (result.action === 'increased') msg = `Increased ${result.name} order by ${result.diff} to total ${result.quantity}.`;
-            else msg = `Decreased ${result.name} order by ${Math.abs(result.diff)} to total ${result.quantity}.`;
+            else msg = `Decreased ${result.name} order by ${Math.abs(result.diff || 0)} to total ${result.quantity}.`;
 
             await interaction.reply(msg);
 
@@ -44,10 +44,14 @@ module.exports = {
 
         // Bulk Edit Mode
         const { success, failed } = parseBulkInput(productInput, productService.getAllProducts(), 'integer');
-        const updates = [];
-        const parsingFailed = [...failed];
+        const updates: string[] = [];
+        const parsingFailed: string[] = [...failed];
 
         for (const item of success) {
+            if (item.value === null) {
+                parsingFailed.push(`${item.name} (No amount provided)`);
+                continue;
+            }
             const result = orderService.editOrder(userId, item.name, item.value);
             if (result.success) {
                 if (result.action !== 'unchanged') {
@@ -70,3 +74,4 @@ module.exports = {
         }
     },
 };
+

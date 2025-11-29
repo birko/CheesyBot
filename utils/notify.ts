@@ -1,7 +1,8 @@
+import { ChatInputCommandInteraction, Guild, TextChannel, Role } from 'discord.js';
 const config = require('../config.json');
 
-async function notifyAdmins(interaction, message) {
-    let guild = interaction.guild;
+export async function notifyAdmins(interaction: ChatInputCommandInteraction, message: string): Promise<void> {
+    let guild: Guild | null = interaction.guild;
 
     // Check if a specific notification guild is configured
     if (config.notificationGuildId) {
@@ -16,18 +17,18 @@ async function notifyAdmins(interaction, message) {
     if (!guild) return;
 
     // Find the admin role to mention in the target guild
-    const adminRole = guild.roles.cache.find(role => role.name === config.adminRole);
+    const adminRole = guild.roles.cache.find((role: Role) => role.name === config.adminRole);
     const mention = adminRole ? `<@&${adminRole.id}>` : '@here';
 
     // Find the notification channel
     const channelName = config.notificationChannel || 'orders';
-    const channel = guild.channels.cache.find(c => c.name === channelName && c.isTextBased());
+    const channel = guild.channels.cache.find(c => c.name === channelName && c.isTextBased()) as TextChannel;
 
     if (channel) {
         try {
             // Add context about where the order came from if cross-guild
             let prefix = '';
-            if (guild.id !== interaction.guildId) {
+            if (guild.id !== interaction.guildId && interaction.guild) {
                 prefix = `[From Server: **${interaction.guild.name}**] `;
             }
 
@@ -40,4 +41,3 @@ async function notifyAdmins(interaction, message) {
     }
 }
 
-module.exports = { notifyAdmins };

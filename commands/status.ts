@@ -1,7 +1,7 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { isAdmin } = require('../utils/auth');
-const orderService = require('../services/orderService');
-const { notifyAdmins } = require('../utils/notify');
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { isAdmin } from '../utils/auth';
+import orderService from '../services/orderService';
+import { notifyAdmins } from '../utils/notify';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -21,19 +21,19 @@ module.exports = {
                     { name: 'Ready', value: 'Ready' },
                     { name: 'Completed', value: 'Completed' }
                 )),
-    async execute(interaction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
             await interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
             return;
         }
 
-        const targetUser = interaction.options.getUser('user');
-        const newStatus = interaction.options.getString('status');
+        const targetUser = interaction.options.getUser('user', true);
+        const newStatus = interaction.options.getString('status', true);
 
         const result = orderService.updateStatus(targetUser.id, newStatus);
 
         if (!result.success) {
-            await interaction.reply({ content: result.error, ephemeral: true });
+            await interaction.reply({ content: result.error || 'Unknown error', ephemeral: true });
             return;
         }
 
@@ -41,3 +41,4 @@ module.exports = {
         await notifyAdmins(interaction, `**Status Update**: ${interaction.user} set status for ${targetUser} to **${result.status}**.`);
     },
 };
+

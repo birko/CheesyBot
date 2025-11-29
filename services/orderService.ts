@@ -1,20 +1,51 @@
-const { loadData, saveData } = require('../utils/storage');
-const { resolveProduct } = require('../utils/product');
+import { loadData, saveData, Data } from '../utils/storage';
+import { resolveProduct } from '../utils/product';
+
+interface Batch {
+    price: number;
+    quantity: number;
+}
+
+interface OrderItems {
+    [productName: string]: Batch[];
+}
+
+interface UserOrder {
+    items: OrderItems;
+    status: string;
+    lastChange: string | number | Date;
+}
+
+interface ServiceResult {
+    success: boolean;
+    error?: string;
+    name?: string;
+    amount?: number;
+    price?: number;
+    quantity?: number;
+    action?: string;
+    diff?: number;
+    cost?: number;
+    count?: number;
+    status?: string;
+}
 
 class OrderService {
+    private data: Data;
+
     constructor() {
         this.data = loadData();
     }
 
-    _refreshData() {
+    private _refreshData() {
         this.data = loadData();
     }
 
-    _save() {
+    private _save() {
         saveData(this.data);
     }
 
-    _migrateUserOrders(userId) {
+    private _migrateUserOrders(userId: string) {
         const userOrders = this.data.orders[userId];
         if (!userOrders) return;
 
@@ -29,13 +60,13 @@ class OrderService {
         }
     }
 
-    getUserOrders(userId) {
+    getUserOrders(userId: string): UserOrder | null {
         this._refreshData();
         this._migrateUserOrders(userId);
         return this.data.orders[userId] || null;
     }
 
-    getAllOrders() {
+    getAllOrders(): Record<string, UserOrder> {
         this._refreshData();
         // Migrate all on access
         for (const userId of Object.keys(this.data.orders)) {
@@ -44,7 +75,7 @@ class OrderService {
         return this.data.orders;
     }
 
-    addOrder(userId, productNameOrIndex, amount) {
+    addOrder(userId: string, productNameOrIndex: string, amount: number): ServiceResult {
         this._refreshData();
         const productName = resolveProduct(this.data.products, productNameOrIndex);
         if (!productName) return { success: false, error: `Product "${productNameOrIndex}" not found.` };
@@ -60,14 +91,14 @@ class OrderService {
 
         // Legacy check for items (should be handled by migration but safe to keep for individual item structure)
         if (typeof userOrder.items[productName] === 'number') {
-            const oldQty = userOrder.items[productName];
+            const oldQty = userOrder.items[productName] as unknown as number;
             const currentPrice = this.data.products[productName] || 0;
             userOrder.items[productName] = [{ price: currentPrice, quantity: oldQty }];
         }
 
         const currentPrice = this.data.products[productName];
         const batches = userOrder.items[productName];
-        const existingBatch = batches.find(b => b.price === currentPrice);
+        const existingBatch = batches.find((b: Batch) => b.price === currentPrice);
 
         if (existingBatch) {
             existingBatch.quantity += amount;
@@ -83,7 +114,7 @@ class OrderService {
         return { success: true, name: productName, amount, price: currentPrice };
     }
 
-    editOrder(userId, productNameOrIndex, newTotal) {
+    editOrder(userId: string, productNameOrIndex: string, newTotal: number): ServiceResult {
         this._refreshData();
         const productName = resolveProduct(this.data.products, productNameOrIndex);
         if (!productName) return { success: false, error: `Product "${productNameOrIndex}" not found.` };
@@ -100,13 +131,13 @@ class OrderService {
 
         // Legacy check
         if (typeof userOrder.items[productName] === 'number') {
-            const oldQty = userOrder.items[productName];
+            const oldQty = userOrder.items[productName] as unknown as number;
             const currentPrice = this.data.products[productName] || 0;
             userOrder.items[productName] = [{ price: currentPrice, quantity: oldQty }];
         }
 
         let batches = userOrder.items[productName];
-        let currentTotal = batches.reduce((sum, b) => sum + b.quantity, 0);
+        let currentTotal = batches.reduce((sum: number, b: Batch) => sum + b.quantity, 0);
         let diff = newTotal - currentTotal;
 
         if (diff === 0) return { success: true, action: 'unchanged', name: productName, quantity: newTotal };
@@ -114,7 +145,7 @@ class OrderService {
         if (diff > 0) {
             // Increase
             const currentPrice = this.data.products[productName];
-            const existingBatch = batches.find(b => b.price === currentPrice);
+            const existingBatch = batches.find((b: Batch) => b.price === currentPrice);
             if (existingBatch) {
                 existingBatch.quantity += diff;
             } else {
@@ -140,7 +171,7 @@ class OrderService {
                     toRemove = 0;
                 }
             }
-            userOrder.items[productName] = batches.filter(b => b.quantity > 0);
+            userOrder.items[productName] = batches.filter((b: Batch) => b.quantity > 0);
             if (userOrder.items[productName].length === 0) {
                 delete userOrder.items[productName];
             }
@@ -153,7 +184,7 @@ class OrderService {
         }
     }
 
-    completeOrder(userId, productNameOrIndex, amount) {
+    completeOrder(userId: string, productNameOrIndex: string, amount: number): ServiceResult {
         this._refreshData();
         this._migrateUserOrders(userId);
         const productName = resolveProduct(this.data.products, productNameOrIndex);
@@ -165,7 +196,7 @@ class OrderService {
         }
 
         let batches = userOrder.items[productName];
-        let totalQuantity = batches.reduce((sum, b) => sum + b.quantity, 0);
+        let totalQuantity = batches.reduce((sum: number, b: Batch) => sum + b.quantity, 0);
 
         if (amount > totalQuantity) {
             return { success: false, error: `Cannot complete ${amount}. User only ordered ${totalQuantity}.` };
@@ -188,17 +219,8 @@ class OrderService {
             }
         }
 
-        userOrder.items[productName] = batches.filter(b => b.quantity > 0);
+        userOrder.items[productName] = batches.filter((b: Batch) => b.quantity > 0);
         if (userOrder.items[productName].length === 0) delete userOrder.items[productName];
-
-        // If no items left, do we delete the user? 
-        // Maybe keep user entry if we want to track status? 
-        // But if empty, status is irrelevant? 
-        // Let's delete if empty to keep it clean, or maybe keep it as "Completed"?
-        // Current logic deletes. Let's stick to delete for now to avoid clutter, 
-        // OR we can check if items are empty and set status to Completed?
-        // User request: "admin can change status to Processing".
-        // Let's just update lastChange. If empty, we can delete.
 
         if (Object.keys(userOrder.items).length === 0) {
             delete this.data.orders[userId];
@@ -210,7 +232,7 @@ class OrderService {
         return { success: true, name: productName, cost: completedCost };
     }
 
-    completeAllOrders() {
+    completeAllOrders(): ServiceResult {
         this._refreshData();
         const totalOrders = Object.keys(this.data.orders).length;
         if (totalOrders === 0) return { success: false, error: "No active orders to complete." };
@@ -220,7 +242,7 @@ class OrderService {
         return { success: true, count: totalOrders };
     }
 
-    completeUserOrders(userId) {
+    completeUserOrders(userId: string): ServiceResult {
         this._refreshData();
         if (!this.data.orders[userId]) return { success: false, error: "User has no active orders." };
 
@@ -229,7 +251,7 @@ class OrderService {
         return { success: true };
     }
 
-    completeProductOrders(userId, productNameOrIndex) {
+    completeProductOrders(userId: string, productNameOrIndex: string): ServiceResult {
         this._refreshData();
         this._migrateUserOrders(userId);
         const productName = resolveProduct(this.data.products, productNameOrIndex);
@@ -251,7 +273,7 @@ class OrderService {
         return { success: true, name: productName };
     }
 
-    updateStatus(userId, newStatus) {
+    updateStatus(userId: string, newStatus: string): ServiceResult {
         this._refreshData();
         this._migrateUserOrders(userId);
 
@@ -265,4 +287,5 @@ class OrderService {
     }
 }
 
-module.exports = new OrderService();
+export default new OrderService();
+

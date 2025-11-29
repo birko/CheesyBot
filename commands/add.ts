@@ -1,8 +1,8 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { isAdmin } = require('../utils/auth');
-const config = require('../config.json');
-const productService = require('../services/productService');
-const { parseBulkInput } = require('../utils/parser');
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { isAdmin } from '../utils/auth';
+import config from '../config.json';
+import productService from '../services/productService';
+import { parseBulkInput } from '../utils/parser';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,20 +16,20 @@ module.exports = {
             option.setName('price')
                 .setDescription('The unit price (optional for bulk add)')
                 .setRequired(false)),
-    async execute(interaction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
             await interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
             return;
         }
 
-        const nameInput = interaction.options.getString('name');
+        const nameInput = interaction.options.getString('name', true);
         const priceInput = interaction.options.getNumber('price');
 
         // Single Product Mode
         if (priceInput !== null) {
             const result = productService.addProduct(nameInput, priceInput);
             if (!result.success) {
-                await interaction.reply({ content: result.error, ephemeral: true });
+                await interaction.reply({ content: result.error || 'Unknown error', ephemeral: true });
             } else {
                 await interaction.reply(`Product "${result.name}" added with price ${config.currency}${result.price}.`);
             }
@@ -38,10 +38,14 @@ module.exports = {
 
         // Bulk Mode
         const { success, failed } = parseBulkInput(nameInput, productService.getAllProducts(), 'number');
-        const added = [];
-        const parsingFailed = [...failed];
+        const added: string[] = [];
+        const parsingFailed: string[] = [...failed];
 
         for (const item of success) {
+            if (item.value === null) {
+                parsingFailed.push(`${item.name} (No price provided)`);
+                continue;
+            }
             const result = productService.addProduct(item.name, item.value);
             if (result.success) {
                 added.push(`${result.name} (${config.currency}${result.price})`);
@@ -58,3 +62,4 @@ module.exports = {
         await interaction.reply(reply);
     },
 };
+
