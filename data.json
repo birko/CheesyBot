@@ -1,0 +1,15 @@
+{
+  "products": {
+    "Korbáčiky": 14
+  },
+  "orders": {
+    "385690005013659648": {
+      "Korbáčiky": [
+        {
+          "price": 14,
+          "quantity": 7
+        }
+      ]
+    }
+  }
+}

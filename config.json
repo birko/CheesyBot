@@ -1,0 +1,6 @@
+{
+  "adminRole": "Admin",
+  "currency": "€",
+  "notificationChannel": "orders",
+  "notificationGuildId": ""
+}
