@@ -40,7 +40,19 @@
         },
         "help": {
             "header": "**Dostupné príkazy:**",
-            "admin_header": "**Admin príkazy:**"
+            "admin_header": "**Admin príkazy:**",
+            "descriptions": {
+                "list": "Zobraziť dostupné produkty",
+                "order": "Objednať produkty",
+                "edit": "Upraviť objednávku",
+                "show": "Zobraziť tvoje objednávky",
+                "add": "Pridať produkty",
+                "remove": "Odstrániť produkty",
+                "update": "Aktualizovať cenu produktu",
+                "orders": "Zobraziť objednávky",
+                "complete": "Dokončiť objednávky",
+                "status": "Aktualizovať stav objednávky"
+            }
         },
         "add": {
             "added_single": "Pridaný produkt **{{name}}** s cenou {{currency}}{{price}}.",

@@ -1,3 +1,23 @@
+{
+    "common": {
+        "error": "Ein Fehler ist aufgetreten.",
+        "permission_denied": "Du hast keine Berechtigung, diesen Befehl zu verwenden.",
+        "unknown_error": "Unbekannter Fehler"
+    },
+    "formatter": {
+        "no_items": "Keine Artikel.",
+        "item_line": "- **{{product}}**: {{quantity}} ({{currency}}{{total}})",
+        "header": "**{{title}}** (Status: **{{status}}**, Letzte Änderung: {{date}}):",
+        "total": "**Gesamt:** {{currency}}{{total}}",
+        "no_active_orders": "{{title}}\nKeine aktiven Bestellungen."
+    },
+    "commands": {
+        "list": {
+            "no_products": "Keine Produkte verfügbar.",
+            "header": "**Verfügbare Produkte:**",
+            "item_format": "{{index}}. **{{name}}** - {{currency}}{{price}}"
+        },
+        "order": {
             "amount_positive": "Menge muss größer als 0 sein.",
             "ordered_single": "{{amount}} x {{name}} bestellt.",
             "admin_notification_single": "**Neue Bestellung**: {{user}} hat {{amount}} x {{name}} bestellt.",
@@ -20,7 +40,19 @@
         },
         "help": {
             "header": "**Verfügbare Befehle:**",
-            "admin_header": "**Admin-Befehle:**"
+            "admin_header": "**Admin-Befehle:**",
+            "descriptions": {
+                "list": "Verfügbare Produkte auflisten",
+                "order": "Produkte bestellen",
+                "edit": "Bestellung bearbeiten",
+                "show": "Deine aktuellen Bestellungen anzeigen",
+                "add": "Produkte hinzufügen",
+                "remove": "Produkte entfernen",
+                "update": "Produktpreis aktualisieren",
+                "orders": "Bestellungen ansehen",
+                "complete": "Bestellungen abschließen",
+                "status": "Bestellstatus aktualisieren"
+            }
         },
         "add": {
             "added_single": "Produkt **{{name}}** mit Preis {{currency}}{{price}} hinzugefügt.",

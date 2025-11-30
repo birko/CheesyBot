@@ -1,3 +1,23 @@
+{
+    "common": {
+        "error": "An error occurred.",
+        "permission_denied": "You do not have permission to use this command.",
+        "unknown_error": "Unknown error"
+    },
+    "formatter": {
+        "no_items": "No items.",
+        "item_line": "- **{{product}}**: {{quantity}} ({{currency}}{{total}})",
+        "header": "**{{title}}** (Status: **{{status}}**, Last Updated: {{date}}):",
+        "total": "**Total:** {{currency}}{{total}}",
+        "no_active_orders": "{{title}}\nNo active orders."
+    },
+    "commands": {
+        "list": {
+            "no_products": "No products available.",
+            "header": "**Available Products:**",
+            "item_format": "{{index}}. **{{name}}** - {{currency}}{{price}}"
+        },
+        "order": {
             "amount_positive": "Amount must be greater than 0.",
             "ordered_single": "Ordered {{amount}} x {{name}}.",
             "admin_notification_single": "**New Order**: {{user}} ordered {{amount}} x {{name}}.",
@@ -20,7 +40,19 @@
         },
         "help": {
             "header": "**Available Commands:**",
-            "admin_header": "**Admin Commands:**"
+            "admin_header": "**Admin Commands:**",
+            "descriptions": {
+                "list": "List available products",
+                "order": "Order products",
+                "edit": "Edit your order",
+                "show": "Show your current orders",
+                "add": "Add products",
+                "remove": "Remove products",
+                "update": "Update product price",
+                "orders": "View orders",
+                "complete": "Complete orders",
+                "status": "Update order status"
+            }
         },
         "add": {
             "added_single": "Added product **{{name}}** with price {{currency}}{{price}}.",

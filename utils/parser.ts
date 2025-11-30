@@ -12,7 +12,7 @@ interface ParsedItem {
  * - "Item1:Value1, Item2:Value2" (for Key-Value pairs)
  * - "Item1, Item2" (for simple lists)
  */
-export function parseBulkInput(inputString: string, products: Record<string, any>, valueType: 'number' | 'integer' | 'none' = 'none'): { success: ParsedItem[], failed: string[] } {
+export function parseBulkInput(inputString: string, products: Record<string, any>, valueType: 'number' | 'integer' | 'none' = 'none', strict: boolean = false): { success: ParsedItem[], failed: string[] } {
     const items = inputString.split(',').map(item => item.trim());
     const success: ParsedItem[] = [];
     const failed: string[] = [];
@@ -44,10 +44,10 @@ export function parseBulkInput(inputString: string, products: Record<string, any
 
         const resolvedName = resolveProduct(products, nameRaw);
 
-        // For 'add' command, we might be adding a NEW product, so resolution might fail if it doesn't exist yet.
-        // But for 'order', 'edit', 'remove', 'update', it must exist.
-        // We'll handle the "must exist" check in the Service layer or via a flag if needed.
-        // For now, we return the resolved name if found, otherwise the raw name (for creation).
+        if (strict && !resolvedName) {
+            failed.push(`${item} (Product not found)`);
+            continue;
+        }
 
         const finalName = resolvedName || nameRaw;
 
