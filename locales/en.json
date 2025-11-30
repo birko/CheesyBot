@@ -2,7 +2,8 @@
     "common": {
         "error": "An error occurred.",
         "permission_denied": "You do not have permission to use this command.",
-        "unknown_error": "Unknown error"
+        "unknown_error": "Unknown error",
+        "language_set": "Language set to **{{language}}**."
     },
     "formatter": {
         "no_items": "No items.",
@@ -51,7 +52,8 @@
                 "update": "Update product price (supports bulk)",
                 "orders": "View orders",
                 "complete": "Complete orders",
-                "status": "Update order status"
+                "status": "Update order status",
+                "language": "Set your preferred language"
             },
             "bulk_example": "**Bulk Input Example:** `Product:Amount, Product2:Amount2` (e.g., `Apple:5, Banana:10`)"
         },

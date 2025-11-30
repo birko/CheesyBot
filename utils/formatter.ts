@@ -1,5 +1,5 @@
 import config from '../config.json';
-import { t } from './i18n';
+
 
 interface Batch {
     price: number;
@@ -19,7 +19,10 @@ export interface UserOrder {
 /**
  * Formats the items of an order into a list string and calculates the total.
  */
-export function formatOrderItems(items: OrderItems): { text: string, total: number } {
+/**
+ * Formats the items of an order into a list string and calculates the total.
+ */
+export function formatOrderItems(items: OrderItems, t: (key: string, options?: any) => string): { text: string, total: number } {
     let text = '';
     let total = 0;
 
@@ -46,13 +49,13 @@ export function formatOrderItems(items: OrderItems): { text: string, total: numb
 /**
  * Formats a full order display with header, status, items, and total.
  */
-export function formatOrder(userOrder: UserOrder, title: string): string {
+export function formatOrder(userOrder: UserOrder, title: string, t: (key: string, options?: any) => string): string {
     if (!userOrder || !userOrder.items || Object.keys(userOrder.items).length === 0) {
         return t('formatter.no_active_orders', { title });
     }
 
     const lastChangeDate = new Date(userOrder.lastChange).toLocaleString();
-    const { text, total } = formatOrderItems(userOrder.items);
+    const { text, total } = formatOrderItems(userOrder.items, t);
 
     let reply = t('formatter.header', { title, status: userOrder.status, date: lastChangeDate }) + '\n';
     reply += text;

@@ -1,29 +1,29 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { isAdmin } from '../utils/auth';
-import { t } from '../utils/i18n';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')
         .setDescription('Show available commands'),
     async execute(interaction: ChatInputCommandInteraction) {
-        let reply = t('commands.help.header') + '\n';
-        reply += '`/list` - ' + t('commands.help.descriptions.list') + '\n';
-        reply += '`/order <product> [amount]` - ' + t('commands.help.descriptions.order') + '\n';
-        reply += '`/edit <product> [amount]` - ' + t('commands.help.descriptions.edit') + '\n';
-        reply += '`/show` - ' + t('commands.help.descriptions.show') + '\n';
+        let reply = interaction.t('commands.help.header') + '\n';
+        reply += `\`/list\` - ${interaction.t('commands.help.descriptions.list')}\n`;
+        reply += `\`/order <product> [amount]\` - ${interaction.t('commands.help.descriptions.order')}\n`;
+        reply += `\`/edit <product> [amount]\` - ${interaction.t('commands.help.descriptions.edit')}\n`;
+        reply += `\`/show\` - ${interaction.t('commands.help.descriptions.show')}\n`;
+        reply += `\`/language <code>\` - ${interaction.t('commands.help.descriptions.language')}\n`;
 
         if (isAdmin(interaction)) {
-            reply += '\n' + t('commands.help.admin_header') + '\n';
-            reply += '`/add <name> [price]` - ' + t('commands.help.descriptions.add') + '\n';
-            reply += '`/remove <name>` - ' + t('commands.help.descriptions.remove') + '\n';
-            reply += '`/update <product> [new_price]` - ' + t('commands.help.descriptions.update') + '\n';
-            reply += '`/orders [user]` - ' + t('commands.help.descriptions.orders') + '\n';
-            reply += '`/complete [product] [user] [amount]` - ' + t('commands.help.descriptions.complete') + '\n';
-            reply += '`/status <user> <status>` - ' + t('commands.help.descriptions.status') + '\n';
+            reply += '\n' + interaction.t('commands.help.admin_header') + '\n';
+            reply += `\`/add <name> [price]\` - ${interaction.t('commands.help.descriptions.add')}\n`;
+            reply += `\`/remove <name>\` - ${interaction.t('commands.help.descriptions.remove')}\n`;
+            reply += `\`/update <product> [new_price]\` - ${interaction.t('commands.help.descriptions.update')}\n`;
+            reply += `\`/orders [user]\` - ${interaction.t('commands.help.descriptions.orders')}\n`;
+            reply += `\`/complete [product] [user] [amount]\` - ${interaction.t('commands.help.descriptions.complete')}\n`;
+            reply += `\`/status <user> <status>\` - ${interaction.t('commands.help.descriptions.status')}\n`;
         }
 
-        reply += '\n' + t('commands.help.bulk_example');
+        reply += '\n' + interaction.t('commands.help.bulk_example');
 
         await interaction.reply(reply);
     },

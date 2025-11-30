@@ -22,7 +22,7 @@ module.exports = {
                 .setRequired(false)),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
-            await interaction.reply({ content: t('common.permission_denied'), ephemeral: true });
+            await interaction.reply({ content: interaction.t('common.permission_denied'), ephemeral: true });
             return;
         }
 
@@ -34,9 +34,9 @@ module.exports = {
         if (!productInput && !targetUser) {
             const result = orderService.completeAllOrders();
             if (!result.success) {
-                await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
+                await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(t('commands.complete.completed_all'));
+                await interaction.reply(interaction.t('commands.complete.completed_all'));
                 await notifyAdmins(interaction, t('commands.complete.admin_notification_all', { user: interaction.user }));
             }
             return;
@@ -46,9 +46,9 @@ module.exports = {
         if (!productInput && targetUser && !amountInput) {
             const result = orderService.completeUserOrders(targetUser.id);
             if (!result.success) {
-                await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
+                await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(t('commands.complete.completed_user', { target: targetUser.username }));
+                await interaction.reply(interaction.t('commands.complete.completed_user', { target: targetUser.username }));
                 await notifyAdmins(interaction, t('commands.complete.admin_notification_user', { user: interaction.user, target: targetUser }));
             }
             return;
@@ -58,14 +58,14 @@ module.exports = {
         if (productInput && targetUser) {
             if (amountInput) {
                 if (amountInput <= 0) {
-                    await interaction.reply({ content: t('commands.order.amount_positive'), ephemeral: true });
+                    await interaction.reply({ content: interaction.t('commands.order.amount_positive'), ephemeral: true });
                     return;
                 }
                 const result = orderService.completeOrder(targetUser.id, productInput, amountInput);
                 if (!result.success) {
-                    await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
+                    await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
                 } else {
-                    await interaction.reply(t('commands.complete.completed_amount_product_user', { amount: result.cost, product: result.name, target: targetUser.username })); // Note: result.cost is returned by completeOrder, but message expects amount/product. Wait, result.name is product name. result.cost is cost.
+                    await interaction.reply(interaction.t('commands.complete.completed_amount_product_user', { amount: result.cost, product: result.name, target: targetUser.username })); // Note: result.cost is returned by completeOrder, but message expects amount/product. Wait, result.name is product name. result.cost is cost.
                     // The message key 'completed_amount_product_user' expects {{amount}}, {{product}}, {{target}}.
                     // completeOrder returns { success: true, name: productName, cost: completedCost }
                     // It does NOT return the amount completed (which is input `amountInput`).
@@ -75,9 +75,9 @@ module.exports = {
             } else {
                 const result = orderService.completeProductOrders(targetUser.id, productInput);
                 if (!result.success) {
-                    await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
+                    await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
                 } else {
-                    await interaction.reply(t('commands.complete.completed_product_user', { product: result.name, target: targetUser.username }));
+                    await interaction.reply(interaction.t('commands.complete.completed_product_user', { product: result.name, target: targetUser.username }));
                     await notifyAdmins(interaction, t('commands.complete.admin_notification_product_user', { user: interaction.user, product: result.name, target: targetUser }));
                 }
             }

@@ -38,6 +38,15 @@ client.once(Events.ClientReady, async readyClient => {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 });
 
+import { getTranslation } from './utils/i18n';
+
+// Extend Interaction to include t function
+declare module 'discord.js' {
+    interface ChatInputCommandInteraction {
+        t: (key: string, options?: any) => string;
+    }
+}
+
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
 
@@ -47,6 +56,9 @@ client.on(Events.InteractionCreate, async interaction => {
         console.error(`No command matching ${interaction.commandName} was found.`);
         return;
     }
+
+    // Inject translator
+    interaction.t = getTranslation(interaction.user.id);
 
     try {
         await command.execute(interaction);

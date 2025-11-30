@@ -24,7 +24,7 @@ module.exports = {
                 )),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
-            await interaction.reply({ content: t('common.permission_denied'), ephemeral: true });
+            await interaction.reply({ content: interaction.t('common.permission_denied'), ephemeral: true });
             return;
         }
 
@@ -34,11 +34,11 @@ module.exports = {
         const result = orderService.updateStatus(targetUser.id, newStatus);
 
         if (!result.success) {
-            await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
+            await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
             return;
         }
 
-        await interaction.reply(t('commands.status.updated', { target: targetUser.username, status: result.status }));
+        await interaction.reply(interaction.t('commands.status.updated', { target: targetUser.username, status: result.status }));
         await notifyAdmins(interaction, t('commands.status.admin_notification', { user: interaction.user, target: targetUser, status: result.status }));
     },
 };

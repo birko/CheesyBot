@@ -2,7 +2,8 @@
     "common": {
         "error": "Ein Fehler ist aufgetreten.",
         "permission_denied": "Du hast keine Berechtigung, diesen Befehl zu verwenden.",
-        "unknown_error": "Unbekannter Fehler"
+        "unknown_error": "Unbekannter Fehler",
+        "language_set": "Sprache auf **{{language}}** gesetzt."
     },
     "formatter": {
         "no_items": "Keine Artikel.",
@@ -51,7 +52,8 @@
                 "update": "Produktpreis aktualisieren (unterstützt Massenoperationen)",
                 "orders": "Bestellungen ansehen",
                 "complete": "Bestellungen abschließen",
-                "status": "Bestellstatus aktualisieren"
+                "status": "Bestellstatus aktualisieren",
+                "language": "Lege deine bevorzugte Sprache fest"
             },
             "bulk_example": "**Beispiel für Masseneingabe:** `Produkt:Menge, Produkt2:Menge2` (z.B. `Apfel:5, Banane:10`)"
         },

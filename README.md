@@ -10,6 +10,7 @@ A robust Discord bot for managing product orders with unified storage, historica
 -   **Currency**: Configurable currency symbol (e.g., €, $, £).
 -   **Role-Based Access**: Admin commands are restricted to a configurable role.
 -   **Dynamic Help**: `/help` command shows available commands based on user permissions.
+-   **Internationalization**: Supports multiple languages with per-user language settings and hot reloading for translations.
 
 ## Installation
 
@@ -42,7 +43,13 @@ A robust Discord bot for managing product orders with unified storage, historica
         -   `language`: The language for the bot (default: "en"). Supported: "en", "de", "sk", "cs".
 
 ## Internationalization (i18n)
-The bot supports multiple languages. To change the language, update the `language` field in `config.json`.
+## Internationalization (i18n)
+The bot supports multiple languages.
+-   **Global Default**: Set the default language in `config.json`.
+-   **Per-User Language**: Users can set their preferred language using the `/language` command.
+-   **Hot Reloading**: Translation files in `locales/` are watched for changes. Updates are applied instantly without restarting the bot.
+
+Supported languages:
 -   **English** (`en`)
 -   **German** (`de`)
 -   **Slovak** (`sk`)
@@ -91,6 +98,7 @@ npm test
     -   Bulk: `/edit product:Apple:10, Banana:0`
 -   `/show`: Show your current active orders and total cost.
 -   `/help`: Show available commands.
+-   `/language <code>`: Set your preferred language (e.g., `/language sk`).
 
 ### Admin Commands
 -   `/add <name> [price]`: Add products.

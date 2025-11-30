@@ -14,7 +14,7 @@ module.exports = {
                 .setRequired(true)),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
-            await interaction.reply({ content: t('common.permission_denied'), ephemeral: true });
+            await interaction.reply({ content: interaction.t('common.permission_denied'), ephemeral: true });
             return;
         }
 
@@ -49,9 +49,9 @@ module.exports = {
         }
 
         let reply = '';
-        if (removed.length > 0) reply += t('commands.remove.removed_bulk_header') + ' ' + removed.join(', ') + '\n';
-        if (removalFailed.length > 0) reply += t('commands.remove.failed_bulk_header') + ' ' + removalFailed.join(', ') + '\n';
-        if (reply === '') reply = t('commands.remove.not_found', { input: productInput });
+        if (removed.length > 0) reply += interaction.t('commands.remove.removed_bulk_header') + ' ' + removed.join(', ') + '\n';
+        if (removalFailed.length > 0) reply += interaction.t('commands.remove.failed_bulk_header') + ' ' + removalFailed.join(', ') + '\n';
+        if (reply === '') reply = interaction.t('commands.remove.not_found', { input: productInput });
 
         await interaction.reply(reply);
     },

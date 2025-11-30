@@ -19,7 +19,7 @@ module.exports = {
                 .setRequired(false)),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
-            await interaction.reply({ content: t('common.permission_denied'), ephemeral: true });
+            await interaction.reply({ content: interaction.t('common.permission_denied'), ephemeral: true });
             return;
         }
 
@@ -30,9 +30,9 @@ module.exports = {
         if (priceInput !== null) {
             const result = productService.updatePrice(productInput, priceInput);
             if (!result.success) {
-                await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
+                await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(t('commands.update.updated_single', { name: result.name, currency: config.currency, oldPrice: result.oldPrice, newPrice: result.newPrice }));
+                await interaction.reply(interaction.t('commands.update.updated_single', { name: result.name, currency: config.currency, oldPrice: result.oldPrice, newPrice: result.newPrice }));
             }
             return;
         }
@@ -56,9 +56,9 @@ module.exports = {
         }
 
         let reply = '';
-        if (updated.length > 0) reply += t('commands.update.updated_bulk_header') + '\n' + updated.join('\n') + '\n';
-        if (parsingFailed.length > 0) reply += t('commands.update.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
-        if (reply === '') reply = t('commands.update.no_prices_updated');
+        if (updated.length > 0) reply += interaction.t('commands.update.updated_bulk_header') + '\n' + updated.join('\n') + '\n';
+        if (parsingFailed.length > 0) reply += interaction.t('commands.update.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
+        if (reply === '') reply = interaction.t('commands.update.no_prices_updated');
 
         await interaction.reply(reply);
     },

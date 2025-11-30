@@ -19,7 +19,7 @@ module.exports = {
                 .setRequired(false)),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
-            await interaction.reply({ content: t('common.permission_denied'), ephemeral: true });
+            await interaction.reply({ content: interaction.t('common.permission_denied'), ephemeral: true });
             return;
         }
 
@@ -30,9 +30,9 @@ module.exports = {
         if (priceInput !== null) {
             const result = productService.addProduct(nameInput, priceInput);
             if (!result.success) {
-                await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
+                await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(t('commands.add.added_single', { name: result.name, currency: config.currency, price: result.price }));
+                await interaction.reply(interaction.t('commands.add.added_single', { name: result.name, currency: config.currency, price: result.price }));
             }
             return;
         }
@@ -56,9 +56,9 @@ module.exports = {
         }
 
         let reply = '';
-        if (added.length > 0) reply += t('commands.add.added_bulk_header') + '\n' + added.join('\n') + '\n';
-        if (parsingFailed.length > 0) reply += t('commands.add.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
-        if (reply === '') reply = t('commands.add.no_products_added');
+        if (added.length > 0) reply += interaction.t('commands.add.added_bulk_header') + '\n' + added.join('\n') + '\n';
+        if (parsingFailed.length > 0) reply += interaction.t('commands.add.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
+        if (reply === '') reply = interaction.t('commands.add.no_products_added');
 
         await interaction.reply(reply);
     },

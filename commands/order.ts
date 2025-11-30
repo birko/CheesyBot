@@ -26,15 +26,15 @@ module.exports = {
         // Single Order Mode
         if (amountInput !== null) {
             if (amountInput <= 0) {
-                await interaction.reply({ content: t('commands.order.amount_positive'), ephemeral: true });
+                await interaction.reply({ content: interaction.t('commands.order.amount_positive'), ephemeral: true });
                 return;
             }
 
             const result = orderService.addOrder(userId, productInput, amountInput);
             if (!result.success) {
-                await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
+                await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(t('commands.order.ordered_single', { amount: result.amount, name: result.name }));
+                await interaction.reply(interaction.t('commands.order.ordered_single', { amount: result.amount, name: result.name }));
                 await notifyAdmins(interaction, t('commands.order.admin_notification_single', { user: interaction.user, amount: result.amount, name: result.name }));
             }
             return;
@@ -47,7 +47,7 @@ module.exports = {
 
         for (const item of success) {
             if (item.value === null || item.value <= 0) {
-                parsingFailed.push(`${item.name} (${t('commands.order.amount_positive')})`);
+                parsingFailed.push(`${item.name} (${interaction.t('commands.order.amount_positive')})`);
                 continue;
             }
             const result = orderService.addOrder(userId, item.name, item.value);
@@ -59,9 +59,9 @@ module.exports = {
         }
 
         let reply = '';
-        if (ordered.length > 0) reply += t('commands.order.ordered_bulk_header') + '\n' + ordered.join('\n') + '\n';
-        if (parsingFailed.length > 0) reply += t('commands.order.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
-        if (reply === '') reply = t('commands.order.no_products_ordered');
+        if (ordered.length > 0) reply += interaction.t('commands.order.ordered_bulk_header') + '\n' + ordered.join('\n') + '\n';
+        if (parsingFailed.length > 0) reply += interaction.t('commands.order.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
+        if (reply === '') reply = interaction.t('commands.order.no_products_ordered');
 
         await interaction.reply(reply);
 

@@ -25,15 +25,15 @@ module.exports = {
         // Single Edit Mode
         if (amountInput !== null) {
             if (amountInput < 0) {
-                await interaction.reply({ content: t('commands.edit.amount_positive'), ephemeral: true });
+                await interaction.reply({ content: interaction.t('commands.edit.amount_positive'), ephemeral: true });
                 return;
             }
 
             const result = orderService.editOrder(userId, productInput, amountInput);
             if (!result.success) {
-                await interaction.reply({ content: result.error || t('common.unknown_error'), ephemeral: true });
+                await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(t('commands.edit.edited_single', { name: result.name, amount: result.amount }));
+                await interaction.reply(interaction.t('commands.edit.edited_single', { name: result.name, amount: result.amount }));
                 if (result.diff !== 0) {
                     await notifyAdmins(interaction, t('commands.edit.admin_notification_single', { user: interaction.user, name: result.name, amount: result.amount }));
                 }
@@ -48,7 +48,7 @@ module.exports = {
 
         for (const item of success) {
             if (item.value === null || item.value < 0) {
-                parsingFailed.push(`${item.name} (${t('commands.edit.amount_positive')})`);
+                parsingFailed.push(`${item.name} (${interaction.t('commands.edit.amount_positive')})`);
                 continue;
             }
             const result = orderService.editOrder(userId, item.name, item.value);
@@ -60,9 +60,9 @@ module.exports = {
         }
 
         let reply = '';
-        if (edited.length > 0) reply += t('commands.edit.edited_bulk_header') + '\n' + edited.join('\n') + '\n';
-        if (parsingFailed.length > 0) reply += t('commands.edit.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
-        if (reply === '') reply = t('commands.edit.no_products_edited');
+        if (edited.length > 0) reply += interaction.t('commands.edit.edited_bulk_header') + '\n' + edited.join('\n') + '\n';
+        if (parsingFailed.length > 0) reply += interaction.t('commands.edit.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
+        if (reply === '') reply = interaction.t('commands.edit.no_products_edited');
 
         await interaction.reply(reply);
 

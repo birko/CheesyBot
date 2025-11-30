@@ -2,7 +2,8 @@
     "common": {
         "error": "Vyskytla sa chyba.",
         "permission_denied": "Nemáš povolenie použiť tento príkaz.",
-        "unknown_error": "Neznáma chyba"
+        "unknown_error": "Neznáma chyba",
+        "language_set": "Jazyk nastavený na **{{language}}**."
     },
     "formatter": {
         "no_items": "Žiadne položky.",
@@ -51,7 +52,8 @@
                 "update": "Aktualizovať cenu produktu (podporuje hromadné operácie)",
                 "orders": "Zobraziť objednávky",
                 "complete": "Dokončiť objednávky",
-                "status": "Aktualizovať stav objednávky"
+                "status": "Aktualizovať stav objednávky",
+                "language": "Nastav si preferovaný jazyk"
             },
             "bulk_example": "**Príklad hromadného vstupu:** `Produkt:Množstvo, Produkt2:Množstvo2` (napr. `Jablko:5, Banán:10`)"
         },
