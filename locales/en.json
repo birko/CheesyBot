@@ -43,16 +43,17 @@
             "admin_header": "**Admin Commands:**",
             "descriptions": {
                 "list": "List available products",
-                "order": "Order products",
-                "edit": "Edit your order",
+                "order": "Order products (supports bulk)",
+                "edit": "Edit your order (supports bulk)",
                 "show": "Show your current orders",
-                "add": "Add products",
-                "remove": "Remove products",
-                "update": "Update product price",
+                "add": "Add products (supports bulk)",
+                "remove": "Remove products (supports bulk)",
+                "update": "Update product price (supports bulk)",
                 "orders": "View orders",
                 "complete": "Complete orders",
                 "status": "Update order status"
-            }
+            },
+            "bulk_example": "**Bulk Input Example:** `Product:Amount, Product2:Amount2` (e.g., `Apple:5, Banana:10`)"
         },
         "add": {
             "added_single": "Added product **{{name}}** with price {{currency}}{{price}}.",

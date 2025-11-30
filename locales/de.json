@@ -43,16 +43,17 @@
             "admin_header": "**Admin-Befehle:**",
             "descriptions": {
                 "list": "Verfügbare Produkte auflisten",
-                "order": "Produkte bestellen",
-                "edit": "Bestellung bearbeiten",
+                "order": "Produkte bestellen (unterstützt Massenoperationen)",
+                "edit": "Bestellung bearbeiten (unterstützt Massenoperationen)",
                 "show": "Deine aktuellen Bestellungen anzeigen",
-                "add": "Produkte hinzufügen",
-                "remove": "Produkte entfernen",
-                "update": "Produktpreis aktualisieren",
+                "add": "Produkte hinzufügen (unterstützt Massenoperationen)",
+                "remove": "Produkte entfernen (unterstützt Massenoperationen)",
+                "update": "Produktpreis aktualisieren (unterstützt Massenoperationen)",
                 "orders": "Bestellungen ansehen",
                 "complete": "Bestellungen abschließen",
                 "status": "Bestellstatus aktualisieren"
-            }
+            },
+            "bulk_example": "**Beispiel für Masseneingabe:** `Produkt:Menge, Produkt2:Menge2` (z.B. `Apfel:5, Banane:10`)"
         },
         "add": {
             "added_single": "Produkt **{{name}}** mit Preis {{currency}}{{price}} hinzugefügt.",

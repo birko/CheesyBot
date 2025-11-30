@@ -43,16 +43,17 @@
             "admin_header": "**Admin príkazy:**",
             "descriptions": {
                 "list": "Zobraziť dostupné produkty",
-                "order": "Objednať produkty",
-                "edit": "Upraviť objednávku",
+                "order": "Objednať produkty (podporuje hromadné operácie)",
+                "edit": "Upraviť objednávku (podporuje hromadné operácie)",
                 "show": "Zobraziť tvoje objednávky",
-                "add": "Pridať produkty",
-                "remove": "Odstrániť produkty",
-                "update": "Aktualizovať cenu produktu",
+                "add": "Pridať produkty (podporuje hromadné operácie)",
+                "remove": "Odstrániť produkty (podporuje hromadné operácie)",
+                "update": "Aktualizovať cenu produktu (podporuje hromadné operácie)",
                 "orders": "Zobraziť objednávky",
                 "complete": "Dokončiť objednávky",
                 "status": "Aktualizovať stav objednávky"
-            }
+            },
+            "bulk_example": "**Príklad hromadného vstupu:** `Produkt:Množstvo, Produkt2:Množstvo2` (napr. `Jablko:5, Banán:10`)"
         },
         "add": {
             "added_single": "Pridaný produkt **{{name}}** s cenou {{currency}}{{price}}.",
@@ -84,7 +85,7 @@
             "admin_notification": "**Zmena stavu**: {{user}} zmenil stav pre {{target}} na **{{status}}**."
         },
         "orders": {
-            "no_active_user": "Užívateľ {{username}} nemá žiadne aktívne objednávky.",
+            "no_active_user": "Užívateľ {{username}} nemá žádne aktívne objednávky.",
             "header_user": "Objednávky pre {{username}}",
             "no_active_global": "Žiadne aktívne objednávky.",
             "header_global": "**Všetky objednávky:**",

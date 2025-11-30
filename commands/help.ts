@@ -23,6 +23,8 @@ module.exports = {
             reply += '`/status <user> <status>` - ' + t('commands.help.descriptions.status') + '\n';
         }
 
+        reply += '\n' + t('commands.help.bulk_example');
+
         await interaction.reply(reply);
     },
 };

@@ -43,16 +43,17 @@
             "admin_header": "**Admin příkazy:**",
             "descriptions": {
                 "list": "Zobrazit dostupné produkty",
-                "order": "Objednat produkty",
-                "edit": "Upravit objednávku",
+                "order": "Objednat produkty (podporuje hromadné operace)",
+                "edit": "Upravit objednávku (podporuje hromadné operace)",
                 "show": "Zobrazit tvé objednávky",
-                "add": "Přidat produkty",
-                "remove": "Odstranit produkty",
-                "update": "Aktualizovat cenu produktu",
+                "add": "Přidat produkty (podporuje hromadné operace)",
+                "remove": "Odstranit produkty (podporuje hromadné operace)",
+                "update": "Aktualizovat cenu produktu (podporuje hromadné operace)",
                 "orders": "Zobrazit objednávky",
                 "complete": "Dokončit objednávky",
                 "status": "Aktualizovat stav objednávky"
-            }
+            },
+            "bulk_example": "**Příklad hromadného vstupu:** `Produkt:Množství, Produkt2:Množství2` (např. `Jablko:5, Banán:10`)"
         },
         "add": {
             "added_single": "Přidán produkt **{{name}}** s cenou {{currency}}{{price}}.",
