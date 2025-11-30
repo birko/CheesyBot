@@ -39,6 +39,23 @@ A robust Discord bot for managing product orders with unified storage, historica
         -   `currency`: The symbol used for prices.
         -   `notificationChannel`: Channel name for admin notifications (default: "orders").
         -   `notificationGuildId`: (Optional) ID of a central server to send all notifications to.
+        -   `language`: The language for the bot (default: "en"). Supported: "en", "de", "sk", "cs".
+
+## Internationalization (i18n)
+The bot supports multiple languages. To change the language, update the `language` field in `config.json`.
+-   **English** (`en`)
+-   **German** (`de`)
+-   **Slovak** (`sk`)
+-   **Czech** (`cs`)
+
+You can add more languages by creating a new JSON file in the `locales/` directory.
+
+## Testing
+The project uses `jest` for unit testing.
+To run the tests:
+```bash
+npm test
+```
 
 ## Usage
 
