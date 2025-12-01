@@ -32,6 +32,7 @@
             "edited_single": "Updated order for **{{name}}** to {{amount}}.",
             "admin_notification_single": "**Order Update**: {{user}} updated {{name}} to {{amount}}.",
             "edited_bulk_header": "**Updated:**",
+            "failed_bulk_header": "**Failed:**",
             "no_products_edited": "No products updated. Check format (Product:Amount, Product2:Amount2).",
             "admin_notification_bulk": "**Bulk Update**: {{user}} updated:\n{{updates}}"
         },
@@ -60,16 +61,19 @@
         "add": {
             "added_single": "Added product **{{name}}** with price {{currency}}{{price}}.",
             "added_bulk_header": "**Added:**",
+            "failed_bulk_header": "**Failed:**",
             "no_products_added": "No products added. Check format (Name:Price, Name2:Price2)."
         },
         "remove": {
             "removed_single": "Removed product **{{name}}**.",
             "removed_bulk_header": "**Removed:**",
+            "failed_bulk_header": "**Failed:**",
             "not_found": "Product \"{{input}}\" not found."
         },
         "update": {
             "updated_single": "Updated price of \"{{name}}\" from {{currency}}{{oldPrice}} to {{currency}}{{newPrice}}.",
             "updated_bulk_header": "**Updated Prices:**",
+            "failed_bulk_header": "**Failed:**",
             "no_prices_updated": "No prices updated. Check format (Product:Price, Product2:Price2)."
         },
         "complete": {

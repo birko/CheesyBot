@@ -32,6 +32,7 @@
             "edited_single": "Bestellung für **{{name}}** auf {{amount}} aktualisiert.",
             "admin_notification_single": "**Bestelländerung**: {{user}} hat {{name}} auf {{amount}} geändert.",
             "edited_bulk_header": "**Aktualisiert:**",
+            "failed_bulk_header": "**Fehlgeschlagen:**",
             "no_products_edited": "Keine Produkte aktualisiert. Überprüfe das Format (Produkt:Menge, Produkt2:Menge2).",
             "admin_notification_bulk": "**Sammeländerung**: {{user}} hat aktualisiert:\n{{updates}}"
         },
@@ -60,16 +61,19 @@
         "add": {
             "added_single": "Produkt **{{name}}** mit Preis {{currency}}{{price}} hinzugefügt.",
             "added_bulk_header": "**Hinzugefügt:**",
+            "failed_bulk_header": "**Fehlgeschlagen:**",
             "no_products_added": "Keine Produkte hinzugefügt. Überprüfe das Format (Name:Preis, Name2:Preis2)."
         },
         "remove": {
             "removed_single": "Produkt **{{name}}** entfernt.",
             "removed_bulk_header": "**Entfernt:**",
+            "failed_bulk_header": "**Fehlgeschlagen:**",
             "not_found": "Produkt \"{{input}}\" nicht gefunden."
         },
         "update": {
             "updated_single": "Preis von \"{{name}}\" von {{currency}}{{oldPrice}} auf {{currency}}{{newPrice}} aktualisiert.",
             "updated_bulk_header": "**Preise aktualisiert:**",
+            "failed_bulk_header": "**Fehlgeschlagen:**",
             "no_prices_updated": "Keine Preise aktualisiert. Überprüfe das Format (Produkt:Preis, Produkt2:Preis2)."
         },
         "complete": {

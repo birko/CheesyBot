@@ -32,6 +32,7 @@
             "edited_single": "Objednávka pre **{{name}}** aktualizovaná na {{amount}}.",
             "admin_notification_single": "**Aktualizácia objednávky**: {{user}} zmenil {{name}} na {{amount}}.",
             "edited_bulk_header": "**Aktualizované:**",
+            "failed_bulk_header": "**Zlyhalo:**",
             "no_products_edited": "Žiadne produkty neboli aktualizované. Skontroluj formát (Produkt:Množstvo, Produkt2:Množstvo2).",
             "admin_notification_bulk": "**Hromadná aktualizácia**: {{user}} aktualizoval:\n{{updates}}"
         },
@@ -60,16 +61,19 @@
         "add": {
             "added_single": "Pridaný produkt **{{name}}** s cenou {{currency}}{{price}}.",
             "added_bulk_header": "**Pridané:**",
+            "failed_bulk_header": "**Zlyhalo:**",
             "no_products_added": "Žiadne produkty neboli pridané. Skontroluj formát (Meno:Cena, Meno2:Cena2)."
         },
         "remove": {
             "removed_single": "Odstránený produkt **{{name}}**.",
             "removed_bulk_header": "**Odstránené:**",
+            "failed_bulk_header": "**Zlyhalo:**",
             "not_found": "Produkt \"{{input}}\" nenájdený."
         },
         "update": {
             "updated_single": "Cena \"{{name}}\" aktualizovaná z {{currency}}{{oldPrice}} na {{currency}}{{newPrice}}.",
             "updated_bulk_header": "**Ceny aktualizované:**",
+            "failed_bulk_header": "**Zlyhalo:**",
             "no_prices_updated": "Žiadne ceny neboli aktualizované. Skontroluj formát (Produkt:Cena, Produkt2:Cena2)."
         },
         "complete": {
