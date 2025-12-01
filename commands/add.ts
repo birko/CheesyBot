@@ -11,7 +11,7 @@ module.exports = {
         .setDescription('Add a new product or multiple products (Admin only)')
         .addStringOption(option =>
             option.setName('name')
-                .setDescription('Product name OR list "Name:Price, Name2:Price2"')
+                .setDescription('Product name/index OR list "Name:Price, Name2:Price2"')
                 .setRequired(true))
         .addNumberOption(option =>
             option.setName('price')
@@ -32,7 +32,7 @@ module.exports = {
             if (!result.success) {
                 await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(interaction.t('commands.add.added_single', { name: result.name, currency: config.currency, price: result.price }));
+                await interaction.reply({ content: interaction.t('commands.add.added_single', { name: result.name, currency: config.currency, price: result.price }), ephemeral: true });
             }
             return;
         }
@@ -60,6 +60,6 @@ module.exports = {
         if (parsingFailed.length > 0) reply += interaction.t('commands.add.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
         if (reply === '') reply = interaction.t('commands.add.no_products_added');
 
-        await interaction.reply(reply);
+        await interaction.reply({ content: reply, ephemeral: true });
     },
 };

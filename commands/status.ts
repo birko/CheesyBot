@@ -2,6 +2,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { isAdmin } from '../utils/auth';
 import orderService from '../services/orderService';
 import { notifyAdmins } from '../utils/notify';
+import { formatUser } from '../utils/formatter';
 import { t } from '../utils/i18n';
 
 module.exports = {
@@ -38,8 +39,8 @@ module.exports = {
             return;
         }
 
-        await interaction.reply(interaction.t('commands.status.updated', { target: targetUser.username, status: result.status }));
-        await notifyAdmins(interaction, t('commands.status.admin_notification', { user: interaction.user, target: targetUser, status: result.status }));
+        await interaction.reply({ content: interaction.t('commands.status.updated', { target: targetUser.username, status: result.status }), ephemeral: true });
+        await notifyAdmins(interaction, t('commands.status.admin_notification', { user: formatUser(interaction.user, interaction.member), target: formatUser(targetUser), status: result.status }));
     },
 };
 

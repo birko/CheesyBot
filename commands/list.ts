@@ -11,7 +11,7 @@ module.exports = {
         const products = productService.getAllProducts();
 
         if (Object.keys(products).length === 0) {
-            await interaction.reply(interaction.t('commands.list.no_products'));
+            await interaction.reply({ content: interaction.t('commands.list.no_products'), ephemeral: true });
             return;
         }
 
@@ -22,7 +22,7 @@ module.exports = {
             index++;
         }
 
-        await interaction.reply(reply);
+        await interaction.reply({ content: reply, ephemeral: true });
     },
 };
 

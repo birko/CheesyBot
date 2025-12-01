@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { notifyAdmins } from '../utils/notify';
+import { formatOrder, formatUser } from '../utils/formatter';
 import orderService from '../services/orderService';
 import productService from '../services/productService';
 import { parseBulkInput } from '../utils/parser';
@@ -12,7 +13,7 @@ module.exports = {
         .setDescription('Order a product or multiple products')
         .addStringOption(option =>
             option.setName('product')
-                .setDescription('Product name OR list "Product1:Amount1, Product2:Amount2"')
+                .setDescription('Product name/index OR list "Product1:Amount1, Product2:Amount2"')
                 .setRequired(true))
         .addIntegerOption(option =>
             option.setName('amount')
@@ -34,8 +35,8 @@ module.exports = {
             if (!result.success) {
                 await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(interaction.t('commands.order.ordered_single', { amount: result.amount, name: result.name }));
-                await notifyAdmins(interaction, t('commands.order.admin_notification_single', { user: interaction.user, amount: result.amount, name: result.name }));
+                await interaction.reply({ content: interaction.t('commands.order.ordered_single', { amount: result.amount, name: result.name }), ephemeral: true });
+                await notifyAdmins(interaction, t('commands.order.admin_notification_single', { user: formatUser(interaction.user, interaction.member), amount: result.amount, name: result.name }));
             }
             return;
         }
@@ -63,10 +64,10 @@ module.exports = {
         if (parsingFailed.length > 0) reply += interaction.t('commands.order.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
         if (reply === '') reply = interaction.t('commands.order.no_products_ordered');
 
-        await interaction.reply(reply);
+        await interaction.reply({ content: reply, ephemeral: true });
 
         if (ordered.length > 0) {
-            await notifyAdmins(interaction, t('commands.order.admin_notification_bulk', { user: interaction.user, orders: ordered.join('\n') }));
+            await notifyAdmins(interaction, t('commands.order.admin_notification_bulk', { user: formatUser(interaction.user, interaction.member), orders: ordered.join('\n') }));
         }
     },
 };

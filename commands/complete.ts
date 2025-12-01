@@ -2,6 +2,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { isAdmin } from '../utils/auth';
 import { notifyAdmins } from '../utils/notify';
 import orderService from '../services/orderService';
+import { formatUser } from '../utils/formatter';
 import { t } from '../utils/i18n';
 
 module.exports = {
@@ -10,7 +11,7 @@ module.exports = {
         .setDescription('Complete an order or part of an order (Admin only)')
         .addStringOption(option =>
             option.setName('product')
-                .setDescription('Product name (optional)')
+                .setDescription('Product name/index (optional)')
                 .setRequired(false))
         .addUserOption(option =>
             option.setName('user')
@@ -36,8 +37,8 @@ module.exports = {
             if (!result.success) {
                 await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(interaction.t('commands.complete.completed_all'));
-                await notifyAdmins(interaction, t('commands.complete.admin_notification_all', { user: interaction.user }));
+                await interaction.reply({ content: interaction.t('commands.complete.completed_all'), ephemeral: true });
+                await notifyAdmins(interaction, t('commands.complete.admin_notification_all', { user: formatUser(interaction.user, interaction.member) }));
             }
             return;
         }
@@ -48,8 +49,8 @@ module.exports = {
             if (!result.success) {
                 await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(interaction.t('commands.complete.completed_user', { target: targetUser.username }));
-                await notifyAdmins(interaction, t('commands.complete.admin_notification_user', { user: interaction.user, target: targetUser }));
+                await interaction.reply({ content: interaction.t('commands.complete.completed_user', { target: targetUser.username }), ephemeral: true });
+                await notifyAdmins(interaction, t('commands.complete.admin_notification_user', { user: formatUser(interaction.user, interaction.member), target: formatUser(targetUser) }));
             }
             return;
         }
@@ -65,20 +66,20 @@ module.exports = {
                 if (!result.success) {
                     await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
                 } else {
-                    await interaction.reply(interaction.t('commands.complete.completed_amount_product_user', { amount: result.cost, product: result.name, target: targetUser.username })); // Note: result.cost is returned by completeOrder, but message expects amount/product. Wait, result.name is product name. result.cost is cost.
+                    await interaction.reply({ content: interaction.t('commands.complete.completed_amount_product_user', { amount: result.cost, product: result.name, target: targetUser.username }), ephemeral: true }); // Note: result.cost is returned by completeOrder, but message expects amount/product. Wait, result.name is product name. result.cost is cost.
                     // The message key 'completed_amount_product_user' expects {{amount}}, {{product}}, {{target}}.
                     // completeOrder returns { success: true, name: productName, cost: completedCost }
                     // It does NOT return the amount completed (which is input `amountInput`).
                     // So I should use `amountInput` for {{amount}}.
-                    await notifyAdmins(interaction, t('commands.complete.admin_notification_amount_product_user', { user: interaction.user, amount: amountInput, product: result.name, target: targetUser }));
+                    await notifyAdmins(interaction, t('commands.complete.admin_notification_amount_product_user', { user: formatUser(interaction.user, interaction.member), amount: amountInput, product: result.name, target: formatUser(targetUser) }));
                 }
             } else {
                 const result = orderService.completeProductOrders(targetUser.id, productInput);
                 if (!result.success) {
                     await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
                 } else {
-                    await interaction.reply(interaction.t('commands.complete.completed_product_user', { product: result.name, target: targetUser.username }));
-                    await notifyAdmins(interaction, t('commands.complete.admin_notification_product_user', { user: interaction.user, product: result.name, target: targetUser }));
+                    await interaction.reply({ content: interaction.t('commands.complete.completed_product_user', { product: result.name, target: targetUser.username }), ephemeral: true });
+                    await notifyAdmins(interaction, t('commands.complete.admin_notification_product_user', { user: formatUser(interaction.user, interaction.member), product: result.name, target: formatUser(targetUser) }));
                 }
             }
             return;

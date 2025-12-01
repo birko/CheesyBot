@@ -10,7 +10,7 @@ module.exports = {
         .setDescription('Remove a product or multiple products (Admin only)')
         .addStringOption(option =>
             option.setName('name')
-                .setDescription('Product name OR list "Product1, Product2"')
+                .setDescription('Product name/index OR list "Product1, Product2"')
                 .setRequired(true)),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
@@ -53,7 +53,7 @@ module.exports = {
         if (removalFailed.length > 0) reply += interaction.t('commands.remove.failed_bulk_header') + ' ' + removalFailed.join(', ') + '\n';
         if (reply === '') reply = interaction.t('commands.remove.not_found', { input: productInput });
 
-        await interaction.reply(reply);
+        await interaction.reply({ content: reply, ephemeral: true });
     },
 };
 

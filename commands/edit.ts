@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { notifyAdmins } from '../utils/notify';
 import orderService from '../services/orderService';
+import { formatUser } from '../utils/formatter';
 import productService from '../services/productService';
 import { parseBulkInput } from '../utils/parser';
 import { t } from '../utils/i18n';
@@ -11,7 +12,7 @@ module.exports = {
         .setDescription('Edit the amount of a product in your order')
         .addStringOption(option =>
             option.setName('product')
-                .setDescription('Product name OR list "Product1:Amount1, Product2:Amount2"')
+                .setDescription('Product name/index OR list "Product1:Amount1, Product2:Amount2"')
                 .setRequired(true))
         .addIntegerOption(option =>
             option.setName('amount')
@@ -33,9 +34,9 @@ module.exports = {
             if (!result.success) {
                 await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
             } else {
-                await interaction.reply(interaction.t('commands.edit.edited_single', { name: result.name, amount: result.amount }));
+                await interaction.reply({ content: interaction.t('commands.edit.edited_single', { name: result.name, amount: result.amount }), ephemeral: true });
                 if (result.diff !== 0) {
-                    await notifyAdmins(interaction, t('commands.edit.admin_notification_single', { user: interaction.user, name: result.name, amount: result.amount }));
+                    await notifyAdmins(interaction, t('commands.edit.admin_notification_single', { user: formatUser(interaction.user, interaction.member), name: result.name, amount: result.amount }));
                 }
             }
             return;
@@ -64,10 +65,10 @@ module.exports = {
         if (parsingFailed.length > 0) reply += interaction.t('commands.edit.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
         if (reply === '') reply = interaction.t('commands.edit.no_products_edited');
 
-        await interaction.reply(reply);
+        await interaction.reply({ content: reply, ephemeral: true });
 
         if (edited.length > 0) {
-            await notifyAdmins(interaction, t('commands.edit.admin_notification_bulk', { user: interaction.user, updates: edited.join('\n') }));
+            await notifyAdmins(interaction, t('commands.edit.admin_notification_bulk', { user: formatUser(interaction.user, interaction.member), updates: edited.join('\n') }));
         }
     },
 };

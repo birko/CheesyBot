@@ -1,4 +1,5 @@
 import config from '../config.json';
+import { User, GuildMember, APIInteractionGuildMember } from 'discord.js';
 
 
 interface Batch {
@@ -64,3 +65,11 @@ export function formatOrder(userOrder: UserOrder, title: string, t: (key: string
     return reply;
 }
 
+
+/**
+ * Formats a user for display (DisplayName (@username)).
+ */
+export function formatUser(user: User, member?: GuildMember | APIInteractionGuildMember | null): string {
+    const displayName = member && 'displayName' in member ? member.displayName : user.globalName || user.username;
+    return `${displayName} (@${user.username})`;
+}

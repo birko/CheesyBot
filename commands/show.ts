@@ -12,12 +12,12 @@ module.exports = {
         const userOrder = orderService.getUserOrders(userId);
 
         if (!userOrder || !userOrder.items || Object.keys(userOrder.items).length === 0) {
-            await interaction.reply(interaction.t('commands.show.no_active_orders'));
+            await interaction.reply({ content: interaction.t('commands.show.no_active_orders'), ephemeral: true });
             return;
         }
 
         const reply = formatOrder(userOrder, interaction.t('commands.show.header'), interaction.t);
-        await interaction.reply(reply);
+        await interaction.reply({ content: reply, ephemeral: true });
     },
 };
 

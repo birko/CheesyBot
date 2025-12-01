@@ -25,6 +25,6 @@ module.exports = {
 
         reply += '\n' + interaction.t('commands.help.bulk_example');
 
-        await interaction.reply(reply);
+        await interaction.reply({ content: reply, ephemeral: true });
     },
 };
