@@ -6,8 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node index.ts",
-    "deploy": "ts-node deploy-commands.ts",
+    "dev": "ts-node --files index.ts",
+    "deploy": "ts-node --files deploy-commands.ts",
     "test": "jest"
   },
   "keywords": [],

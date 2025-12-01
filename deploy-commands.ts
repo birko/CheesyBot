@@ -41,6 +41,18 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN as string);
                     console.error(`Failed to deploy to guild ${guildId}:`, error);
                 }
             }
+
+            // Clear global commands to prevent duplicates/conflicts
+            try {
+                console.log('Clearing global commands...');
+                await rest.put(
+                    Routes.applicationCommands(process.env.CLIENT_ID as string),
+                    { body: [] },
+                );
+                console.log('Successfully cleared global application (/) commands.');
+            } catch (error) {
+                console.error('Failed to clear global commands:', error);
+            }
         } else {
             console.log('No GUILD_IDS found in .env, deploying globally.');
             const data = await rest.put(

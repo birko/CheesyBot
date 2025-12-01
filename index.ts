@@ -5,12 +5,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Extend Client to include commands
-declare module 'discord.js' {
-    interface Client {
-        commands: Collection<string, any>;
-    }
-}
+
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -40,12 +35,7 @@ client.once(Events.ClientReady, async readyClient => {
 
 import { getTranslation } from './utils/i18n';
 
-// Extend Interaction to include t function
-declare module 'discord.js' {
-    interface ChatInputCommandInteraction {
-        t: (key: string, options?: any) => string;
-    }
-}
+
 
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
