@@ -107,9 +107,15 @@ npm test
 -   `/remove <name>`: Remove products (by name or index).
     -   Single: `/remove name:Apple` OR `/remove name:1`
     -   Bulk: `/remove name:Apple, Banana` OR `/remove name:1, 2`
--   `/update <product> [new_price]`: Update product prices (by name or index).
-    -   Single: `/update product:Apple new_price:2.0` OR `/update product:1 new_price:2.0`
-    -   Bulk: `/update product:Apple:2.0, Banana:1.0`
+-   `/update <product> [new_price] [new_name]`: Update product details (price and/or name).
+    -   Reprice: `/update product:Apple new_price:2.0`
+    -   Rename: `/update product:Apple new_name:Orange`
+    -   Both: `/update product:Apple new_price:2.0 new_name:Orange`
+    -   Bulk:
+        -   `/update product:Apple:2.0, Banana:1.0` (Reprice multiple)
+        -   `/update product:Apple:Orange, Grape:Violet` (Rename multiple)
+        -   `/update product:Apple:Orange:2.0, Banana:1.0` (Mixed/Both)
+        -   `/update product:"Apple, Banana" new_price:2.0` (Reprice multiple with arg)
 -   `/orders [user]`: View all orders or orders for a specific user. Displays order indices for easy reference.
 -   `/complete [product] [user|index] [amount]`: Complete orders (by name or index).
     -   All Orders: `/complete`

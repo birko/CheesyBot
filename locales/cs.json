@@ -50,13 +50,13 @@
                 "show": "Zobrazit tvé objednávky",
                 "add": "Přidat produkty (podporuje hromadné operace)",
                 "remove": "Odstranit produkty (podporuje hromadné operace)",
-                "update": "Aktualizovat cenu produktu (podporuje hromadné operace)",
+                "update": "Aktualizovat detaily produktu (podporuje hromadné přejmenování/přecenění)",
                 "orders": "Zobrazit objednávky",
                 "complete": "Dokončit objednávky",
                 "status": "Aktualizovat stav objednávky",
                 "language": "Nastav si preferovaný jazyk"
             },
-            "bulk_example": "**Příklad hromadného vstupu:** `Produkt:Množství, Produkt2:Množství2` (např. `Jablko:5, Banán:10`)"
+            "bulk_example": "**Příklady hromadného vstupu:**\n- `Produkt:Cena` (Změna ceny)\n- `Produkt:NovéJméno` (Přejmenování)\n- `Produkt:NovéJméno:Cena` (Obojí)\n- `Produkt, Produkt2` (Použití s `new_price`)\nPříklad: `Jablko, Banán:2.0`"
         },
         "add": {
             "added_single": "Přidán produkt **{{name}}** s cenou {{currency}}{{price}}.",
@@ -71,10 +71,14 @@
             "not_found": "Produkt \"{{input}}\" nenalezen."
         },
         "update": {
-            "updated_single": "Cena \"{{name}}\" aktualizována z {{currency}}{{oldPrice}} na {{currency}}{{newPrice}}.",
+            "updated_price": "Cena \"{{name}}\" aktualizována z {{currency}}{{oldPrice}} na {{currency}}{{newPrice}}.",
+            "updated_name": "Přejmenováno \"{{oldName}}\" na \"{{newName}}\".",
+            "updated_both": "Přejmenováno \"{{oldName}}\" na \"{{newName}}\" a cena aktualizována z {{currency}}{{oldPrice}} na {{currency}}{{newPrice}}.",
+            "no_args": "Prosím zadejte nové jméno nebo novou cenu.",
             "updated_bulk_header": "**Ceny aktualizovány:**",
             "failed_bulk_header": "**Selhalo:**",
-            "no_prices_updated": "Žádné ceny nebyly aktualizovány. Zkontroluj formát (Produkt:Cena, Produkt2:Cena2)."
+            "no_prices_updated": "Žádné ceny nebyly aktualizovány. Zkontroluj formát (Produkt:Cena, Produkt2:Cena2).",
+            "rename_multiple_error": "Nelze přejmenovat více produktů najednou pomocí argumentu 'nové_jméno'. Přejmenujte je jednotlivě nebo použijte syntaxi 'Jméno:NovéJméno' v hromadných možnostech."
         },
         "complete": {
             "completed_all": "Všechny objednávky dokončeny.",

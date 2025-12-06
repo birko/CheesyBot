@@ -50,13 +50,13 @@
                 "show": "Show your current orders",
                 "add": "Add products (supports bulk)",
                 "remove": "Remove products (supports bulk)",
-                "update": "Update product price (supports bulk)",
+                "update": "Update product details (supports bulk rename/reprice)",
                 "orders": "View orders (shows indices)",
                 "complete": "Complete orders (by user or index)",
                 "status": "Update order status (by user or index)",
                 "language": "Set your preferred language"
             },
-            "bulk_example": "**Bulk Input Example:** `Product:Amount, Product2:Amount2` (e.g., `Apple:5, Banana:10`)"
+            "bulk_example": "**Bulk Input Examples:**\n- `Product:Price` (Reprice)\n- `Product:NewName` (Rename)\n- `Product:NewName:Price` (Both)\n- `Product, Product2` (Use with `new_price` arg)\nExample: `Apple, Banana:2.0`"
         },
         "add": {
             "added_single": "Added product **{{name}}** with price {{currency}}{{price}}.",
@@ -71,10 +71,14 @@
             "not_found": "Product \"{{input}}\" not found."
         },
         "update": {
-            "updated_single": "Updated price of \"{{name}}\" from {{currency}}{{oldPrice}} to {{currency}}{{newPrice}}.",
+            "updated_price": "Updated price of \"{{name}}\" from {{currency}}{{oldPrice}} to {{currency}}{{newPrice}}.",
+            "updated_name": "Renamed \"{{oldName}}\" to \"{{newName}}\".",
+            "updated_both": "Renamed \"{{oldName}}\" to \"{{newName}}\" and updated price from {{currency}}{{oldPrice}} to {{currency}}{{newPrice}}.",
+            "no_args": "Please provide a new name or a new price.",
             "updated_bulk_header": "**Updated Prices:**",
             "failed_bulk_header": "**Failed:**",
-            "no_prices_updated": "No prices updated. Check format (Product:Price, Product2:Price2)."
+            "no_prices_updated": "No prices updated. Check format (Product:Price, Product2:Price2).",
+            "rename_multiple_error": "Cannot rename multiple products at once using the 'new_name' argument. Please rename them individually or use 'Name:NewName' syntax in the bulk options."
         },
         "complete": {
             "completed_all": "Completed all orders.",

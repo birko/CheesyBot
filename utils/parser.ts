@@ -62,3 +62,76 @@ export function parseBulkInput(inputString: string, products: Record<string, any
     return { success, failed };
 }
 
+export interface ParsedUpdate {
+    name: string;
+    newName?: string;
+    newPrice?: number;
+    original: string;
+}
+
+/**
+ * Parses complex bulk input for updates.
+ * Supports:
+ * - "Name:Price"
+ * - "Name:NewName"
+ * - "Name:NewName:Price"
+ */
+export function parseComplexBulkInput(inputString: string, products: Record<string, any>): { success: ParsedUpdate[], failed: string[] } {
+    const items = inputString.split(',').map(item => item.trim());
+    const success: ParsedUpdate[] = [];
+    const failed: string[] = [];
+
+    for (const item of items) {
+        const parts = item.split(':').map(p => p.trim());
+        if (parts.length < 1 || parts.length > 3) {
+            failed.push(`${item} (Invalid format)`);
+            continue;
+        }
+
+        const currentNameRaw = parts[0];
+        const resolvedCurrentName = resolveProduct(products, currentNameRaw);
+
+        if (!resolvedCurrentName) {
+            failed.push(`${item} (Product not found)`);
+            continue;
+        }
+
+        let newName: string | undefined;
+        let newPrice: number | undefined;
+
+        if (parts.length === 2) {
+            // Check if second part is number (Price) or string (Name)
+            const part2 = parts[1];
+            const asNumber = parseFloat(part2);
+
+            if (!isNaN(asNumber)) {
+                newPrice = asNumber;
+            } else {
+                newName = part2;
+            }
+        } else if (parts.length === 3) {
+            // Name:NewName:Price
+            newName = parts[1];
+            const priceRaw = parts[2];
+            const asNumber = parseFloat(priceRaw);
+
+            if (isNaN(asNumber)) {
+                failed.push(`${item} (Invalid price)`);
+                continue;
+            }
+            newPrice = asNumber;
+        }
+
+        // Length 1: newName/Price undefined (valid for arg mixing)
+
+        success.push({
+            name: resolvedCurrentName,
+            newName,
+            newPrice,
+            original: item
+        });
+    }
+
+    return { success, failed };
+}
+

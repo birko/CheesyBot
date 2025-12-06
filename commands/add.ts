@@ -1,9 +1,9 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
-import { isAdmin } from '../utils/auth';
+import { adminCommand } from '../utils/guards';
+import { sendBulkResponse } from '../utils/response';
 import config from '../config.json';
 import productService from '../services/productService';
 import { parseBulkInput } from '../utils/parser';
-import { t } from '../utils/i18n';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -17,12 +17,7 @@ module.exports = {
             option.setName('price')
                 .setDescription('The price of the product (optional for bulk add)')
                 .setRequired(false)),
-    async execute(interaction: ChatInputCommandInteraction) {
-        if (!isAdmin(interaction)) {
-            await interaction.reply({ content: interaction.t('common.permission_denied'), flags: MessageFlags.Ephemeral });
-            return;
-        }
-
+    execute: adminCommand(async (interaction: ChatInputCommandInteraction) => {
         const nameInput = interaction.options.getString('name', true);
         const priceInput = interaction.options.getNumber('price');
 
@@ -55,11 +50,13 @@ module.exports = {
             }
         }
 
-        let reply = '';
-        if (added.length > 0) reply += interaction.t('commands.add.added_bulk_header') + '\n' + added.join('\n') + '\n';
-        if (parsingFailed.length > 0) reply += interaction.t('commands.add.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
-        if (reply === '') reply = interaction.t('commands.add.no_products_added');
-
-        await interaction.reply({ content: reply, flags: MessageFlags.Ephemeral });
-    },
+        await sendBulkResponse({
+            interaction,
+            added,
+            failed: parsingFailed,
+            headerKey: 'commands.add.added_bulk_header',
+            failedHeaderKey: 'commands.add.failed_bulk_header',
+            emptyKey: 'commands.add.no_products_added'
+        });
+    }),
 };

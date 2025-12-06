@@ -47,14 +47,35 @@ describe('ProductService', () => {
         expect(result.success).toBe(false);
     });
 
-    test('updatePrice updates price', () => {
-        const result = productService.updatePrice('Apple', 2.0);
+    test('updateProduct updates price', () => {
+        const result = productService.updateProduct('Apple', { newPrice: 2.0 });
         expect(result.success).toBe(true);
         expect(mockData.products['Apple']).toBe(2.0);
     });
 
-    test('updatePrice fails if product does not exist', () => {
-        const result = productService.updatePrice('Grape', 2.0);
+    test('updateProduct updates name and syncs orders', () => {
+        // Setup existing order
+        mockData.orders = {
+            'user1': {
+                items: {
+                    'Apple': [{ price: 1.5, quantity: 5 }]
+                }
+            }
+        };
+
+        const result = productService.updateProduct('Apple', { newName: 'Granny Smith' });
+        expect(result.success).toBe(true);
+        expect(mockData.products['Apple']).toBeUndefined();
+        expect(mockData.products['Granny Smith']).toBe(1.5);
+
+        // Verify order update
+        expect(mockData.orders['user1'].items['Apple']).toBeUndefined();
+        expect(mockData.orders['user1'].items['Granny Smith']).toBeDefined();
+        expect(mockData.orders['user1'].items['Granny Smith'][0].quantity).toBe(5);
+    });
+
+    test('updateProduct fails if product does not exist', () => {
+        const result = productService.updateProduct('Grape', { newPrice: 2.0 });
         expect(result.success).toBe(false);
     });
 });

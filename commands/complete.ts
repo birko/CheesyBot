@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
-import { isAdmin } from '../utils/auth';
+import { adminCommand } from '../utils/guards';
+import { resolveTargetUser } from '../utils/orderHelpers';
 import { notifyAdmins } from '../utils/notify';
 import orderService from '../services/orderService';
 import { formatUser } from '../utils/formatter';
@@ -25,31 +26,17 @@ module.exports = {
             option.setName('amount')
                 .setDescription('Amount to complete (optional)')
                 .setRequired(false)),
-    async execute(interaction: ChatInputCommandInteraction) {
-        if (!isAdmin(interaction)) {
-            await interaction.reply({ content: interaction.t('common.permission_denied'), flags: MessageFlags.Ephemeral });
-            return;
-        }
-
+    execute: adminCommand(async (interaction: ChatInputCommandInteraction) => {
         const productInput = interaction.options.getString('product');
-        let targetUser = interaction.options.getUser('user');
         const index = interaction.options.getInteger('index');
         const amountInput = interaction.options.getInteger('amount');
 
-        if (index) {
-            const userId = orderService.getUserByIndex(index);
-            if (!userId) {
-                await interaction.reply({ content: interaction.t('commands.status.invalid_index', { index }), flags: MessageFlags.Ephemeral });
-                return;
-            }
-            try {
-                targetUser = await interaction.client.users.fetch(userId);
-            } catch (error) {
-                console.error(`Failed to fetch user ${userId}:`, error);
-                await interaction.reply({ content: interaction.t('common.unknown_error'), flags: MessageFlags.Ephemeral });
-                return;
-            }
-        }
+        // Resolve target user (handles index lookup and errors)
+        const targetUser = await resolveTargetUser(interaction);
+
+        // If index was provided but user resolution failed (returned null), we stop (reply already sent)
+        // If neither user nor index provided, targetUser is null, which is valid for "Complete ALL"
+        if (index && !targetUser) return;
 
         // Case 1: Complete ALL orders (No product, no user, no index)
         if (!productInput && !targetUser && !index) {
@@ -107,5 +94,5 @@ module.exports = {
 
         // Case 4: Invalid combination
         await interaction.reply({ content: 'Invalid command usage. Check `/help` for examples.', flags: MessageFlags.Ephemeral });
-    },
+    }),
 };

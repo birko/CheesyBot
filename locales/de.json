@@ -50,13 +50,13 @@
                 "show": "Deine aktuellen Bestellungen anzeigen",
                 "add": "Produkte hinzufügen (unterstützt Massenoperationen)",
                 "remove": "Produkte entfernen (unterstützt Massenoperationen)",
-                "update": "Produktpreis aktualisieren (unterstützt Massenoperationen)",
+                "update": "Produktdetails aktualisieren (unterstützt Massenumbenennung/-preisänderung)",
                 "orders": "Bestellungen ansehen",
                 "complete": "Bestellungen abschließen",
                 "status": "Bestellstatus aktualisieren",
                 "language": "Lege deine bevorzugte Sprache fest"
             },
-            "bulk_example": "**Beispiel für Masseneingabe:** `Produkt:Menge, Produkt2:Menge2` (z.B. `Apfel:5, Banane:10`)"
+            "bulk_example": "**Beispiele für Masseneingabe:**\n- `Produkt:Preis` (Preisänderung)\n- `Produkt:NeuerName` (Umbenennung)\n- `Produkt:NeuerName:Preis` (Beides)\n- `Produkt, Produkt2` (Verwendung mit `new_price`)\nBeispiel: `Apfel, Banane:2.0`"
         },
         "add": {
             "added_single": "Produkt **{{name}}** mit Preis {{currency}}{{price}} hinzugefügt.",
@@ -71,10 +71,14 @@
             "not_found": "Produkt \"{{input}}\" nicht gefunden."
         },
         "update": {
-            "updated_single": "Preis von \"{{name}}\" von {{currency}}{{oldPrice}} auf {{currency}}{{newPrice}} aktualisiert.",
+            "updated_price": "Preis von \"{{name}}\" von {{currency}}{{oldPrice}} auf {{currency}}{{newPrice}} aktualisiert.",
+            "updated_name": "\"{{oldName}}\" in \"{{newName}}\" umbenannt.",
+            "updated_both": "\"{{oldName}}\" in \"{{newName}}\" umbenannt und Preis von {{currency}}{{oldPrice}} auf {{currency}}{{newPrice}} aktualisiert.",
+            "no_args": "Bitte geben Sie einen neuen Namen oder einen neuen Preis an.",
             "updated_bulk_header": "**Preise aktualisiert:**",
             "failed_bulk_header": "**Fehlgeschlagen:**",
-            "no_prices_updated": "Keine Preise aktualisiert. Überprüfe das Format (Produkt:Preis, Produkt2:Preis2)."
+            "no_prices_updated": "Keine Preise aktualisiert. Überprüfe das Format (Produkt:Preis, Produkt2:Preis2).",
+            "rename_multiple_error": "Kann nicht mehrere Produkte gleichzeitig mit dem Argument 'neuer_ame' umbenennen. Bitte benennen Sie sie einzeln um oder verwenden Sie die Syntax 'Name:NeuerName' in den Massenoptionen."
         },
         "complete": {
             "completed_all": "Alle Bestellungen abgeschlossen.",

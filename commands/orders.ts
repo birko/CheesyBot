@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
-import { isAdmin } from '../utils/auth';
+import { adminCommand } from '../utils/guards';
 import config from '../config.json';
 import orderService from '../services/orderService';
 import { formatOrder } from '../utils/formatter';
@@ -13,11 +13,7 @@ module.exports = {
             option.setName('user')
                 .setDescription('The user to view orders for')
                 .setRequired(false)),
-    async execute(interaction: ChatInputCommandInteraction) {
-        if (!isAdmin(interaction)) {
-            await interaction.reply({ content: interaction.t('common.permission_denied'), flags: MessageFlags.Ephemeral });
-            return;
-        }
+    execute: adminCommand(async (interaction: ChatInputCommandInteraction) => {
 
         const targetUser = interaction.options.getUser('user');
         const allOrders = orderService.getAllOrders();
@@ -72,7 +68,7 @@ module.exports = {
             reply += '\n' + interaction.t('commands.orders.grand_total', { currency: config.currency, total: globalTotal.toFixed(2) });
             await interaction.reply({ content: reply, flags: MessageFlags.Ephemeral });
         }
-    },
+    }),
 };
 
 
