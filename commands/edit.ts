@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { notifyAdmins } from '../utils/notify';
 import orderService from '../services/orderService';
 import { formatUser } from '../utils/formatter';
@@ -26,15 +26,15 @@ module.exports = {
         // Single Edit Mode
         if (amountInput !== null) {
             if (amountInput < 0) {
-                await interaction.reply({ content: interaction.t('commands.edit.amount_positive'), ephemeral: true });
+                await interaction.reply({ content: interaction.t('commands.edit.amount_positive'), flags: MessageFlags.Ephemeral });
                 return;
             }
 
             const result = orderService.editOrder(userId, productInput, amountInput);
             if (!result.success) {
-                await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
+                await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), flags: MessageFlags.Ephemeral });
             } else {
-                await interaction.reply({ content: interaction.t('commands.edit.edited_single', { name: result.name, amount: result.amount }), ephemeral: true });
+                await interaction.reply({ content: interaction.t('commands.edit.edited_single', { name: result.name, amount: result.amount }), flags: MessageFlags.Ephemeral });
                 if (result.diff !== 0) {
                     await notifyAdmins(interaction, t('commands.edit.admin_notification_single', { user: formatUser(interaction.user, interaction.member), name: result.name, amount: result.amount }));
                 }
@@ -65,7 +65,7 @@ module.exports = {
         if (parsingFailed.length > 0) reply += interaction.t('commands.edit.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
         if (reply === '') reply = interaction.t('commands.edit.no_products_edited');
 
-        await interaction.reply({ content: reply, ephemeral: true });
+        await interaction.reply({ content: reply, flags: MessageFlags.Ephemeral });
 
         if (edited.length > 0) {
             await notifyAdmins(interaction, t('commands.edit.admin_notification_bulk', { user: formatUser(interaction.user, interaction.member), updates: edited.join('\n') }));

@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { isAdmin } from '../utils/auth';
 import config from '../config.json';
 import productService from '../services/productService';
@@ -19,7 +19,7 @@ module.exports = {
                 .setRequired(false)),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
-            await interaction.reply({ content: interaction.t('common.permission_denied'), ephemeral: true });
+            await interaction.reply({ content: interaction.t('common.permission_denied'), flags: MessageFlags.Ephemeral });
             return;
         }
 
@@ -30,9 +30,9 @@ module.exports = {
         if (priceInput !== null) {
             const result = productService.addProduct(nameInput, priceInput);
             if (!result.success) {
-                await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
+                await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), flags: MessageFlags.Ephemeral });
             } else {
-                await interaction.reply({ content: interaction.t('commands.add.added_single', { name: result.name, currency: config.currency, price: result.price }), ephemeral: true });
+                await interaction.reply({ content: interaction.t('commands.add.added_single', { name: result.name, currency: config.currency, price: result.price }), flags: MessageFlags.Ephemeral });
             }
             return;
         }
@@ -60,6 +60,6 @@ module.exports = {
         if (parsingFailed.length > 0) reply += interaction.t('commands.add.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
         if (reply === '') reply = interaction.t('commands.add.no_products_added');
 
-        await interaction.reply({ content: reply, ephemeral: true });
+        await interaction.reply({ content: reply, flags: MessageFlags.Ephemeral });
     },
 };

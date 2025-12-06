@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { isAdmin } from '../utils/auth';
 
 module.exports = {
@@ -19,12 +19,12 @@ module.exports = {
             reply += `\`/remove <name>\` - ${interaction.t('commands.help.descriptions.remove')}\n`;
             reply += `\`/update <product> [new_price]\` - ${interaction.t('commands.help.descriptions.update')}\n`;
             reply += `\`/orders [user]\` - ${interaction.t('commands.help.descriptions.orders')}\n`;
-            reply += `\`/complete [product] [user] [amount]\` - ${interaction.t('commands.help.descriptions.complete')}\n`;
-            reply += `\`/status <user> <status>\` - ${interaction.t('commands.help.descriptions.status')}\n`;
+            reply += `\`/complete [product] [user|index] [amount]\` - ${interaction.t('commands.help.descriptions.complete')}\n`;
+            reply += `\`/status <status> <user|index>\` - ${interaction.t('commands.help.descriptions.status')}\n`;
         }
 
         reply += '\n' + interaction.t('commands.help.bulk_example');
 
-        await interaction.reply({ content: reply, ephemeral: true });
+        await interaction.reply({ content: reply, flags: MessageFlags.Ephemeral });
     },
 };

@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { setUserLanguage } from '../utils/storage';
 import { t } from '../utils/i18n';
 
@@ -26,6 +26,6 @@ module.exports = {
         const i18next = require('../utils/i18n').default;
         const localT = i18next.getFixedT(language);
 
-        await interaction.reply({ content: localT('common.language_set', { language }), ephemeral: true });
+        await interaction.reply({ content: localT('common.language_set', { language }), flags: MessageFlags.Ephemeral });
     },
 };

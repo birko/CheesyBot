@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { notifyAdmins } from '../utils/notify';
 import { formatOrder, formatUser } from '../utils/formatter';
 import orderService from '../services/orderService';
@@ -27,15 +27,15 @@ module.exports = {
         // Single Order Mode
         if (amountInput !== null) {
             if (amountInput <= 0) {
-                await interaction.reply({ content: interaction.t('commands.order.amount_positive'), ephemeral: true });
+                await interaction.reply({ content: interaction.t('commands.order.amount_positive'), flags: MessageFlags.Ephemeral });
                 return;
             }
 
             const result = orderService.addOrder(userId, productInput, amountInput);
             if (!result.success) {
-                await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), ephemeral: true });
+                await interaction.reply({ content: result.error || interaction.t('common.unknown_error'), flags: MessageFlags.Ephemeral });
             } else {
-                await interaction.reply({ content: interaction.t('commands.order.ordered_single', { amount: result.amount, name: result.name }), ephemeral: true });
+                await interaction.reply({ content: interaction.t('commands.order.ordered_single', { amount: result.amount, name: result.name }), flags: MessageFlags.Ephemeral });
                 await notifyAdmins(interaction, t('commands.order.admin_notification_single', { user: formatUser(interaction.user, interaction.member), amount: result.amount, name: result.name }));
             }
             return;
@@ -64,7 +64,7 @@ module.exports = {
         if (parsingFailed.length > 0) reply += interaction.t('commands.order.failed_bulk_header') + '\n' + parsingFailed.join('\n') + '\n';
         if (reply === '') reply = interaction.t('commands.order.no_products_ordered');
 
-        await interaction.reply({ content: reply, ephemeral: true });
+        await interaction.reply({ content: reply, flags: MessageFlags.Ephemeral });
 
         if (ordered.length > 0) {
             await notifyAdmins(interaction, t('commands.order.admin_notification_bulk', { user: formatUser(interaction.user, interaction.member), orders: ordered.join('\n') }));

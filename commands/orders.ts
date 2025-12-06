@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { isAdmin } from '../utils/auth';
 import config from '../config.json';
 import orderService from '../services/orderService';
@@ -15,7 +15,7 @@ module.exports = {
                 .setRequired(false)),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
-            await interaction.reply({ content: interaction.t('common.permission_denied'), ephemeral: true });
+            await interaction.reply({ content: interaction.t('common.permission_denied'), flags: MessageFlags.Ephemeral });
             return;
         }
 
@@ -25,32 +25,36 @@ module.exports = {
         if (targetUser) {
             const userOrder = allOrders[targetUser.id];
             if (!userOrder || !userOrder.items || Object.keys(userOrder.items).length === 0) {
-                await interaction.reply({ content: interaction.t('commands.orders.no_active_user', { username: targetUser.username }), ephemeral: true });
+                await interaction.reply({ content: interaction.t('commands.orders.no_active_user', { username: targetUser.username }), flags: MessageFlags.Ephemeral });
                 return;
             }
 
             const reply = formatOrder(userOrder, interaction.t('commands.orders.header_user', { username: targetUser.username }), interaction.t);
-            await interaction.reply({ content: reply, ephemeral: true });
+            await interaction.reply({ content: reply, flags: MessageFlags.Ephemeral });
         } else {
-            if (Object.keys(allOrders).length === 0) {
-                await interaction.reply({ content: interaction.t('commands.orders.no_active_global'), ephemeral: true });
+            const sortedOrders = orderService.getSortedOrders();
+
+            if (sortedOrders.length === 0) {
+                await interaction.reply({ content: interaction.t('commands.orders.no_active_global'), flags: MessageFlags.Ephemeral });
                 return;
             }
 
             let reply = interaction.t('commands.orders.header_global') + '\n';
             let globalTotal = 0;
+            let index = 1;
 
-            for (const [userId, userOrder] of Object.entries(allOrders)) {
+            for (const [userId, userOrder] of sortedOrders) {
                 if (!userOrder.items) continue;
 
                 let userTotal = 0;
-                let userLine = `<@${userId}> [${userOrder.status}]: `;
+                let userLine = `**${index}.** <@${userId}> [${userOrder.status}]: `;
                 const products: string[] = [];
 
                 for (const [product, batches] of Object.entries(userOrder.items)) {
                     let productTotal = 0;
                     let productQuantity = 0;
 
+                    // @ts-ignore
                     for (const batch of batches) {
                         productTotal += batch.price * batch.quantity;
                         productQuantity += batch.quantity;
@@ -62,10 +66,11 @@ module.exports = {
                 globalTotal += userTotal;
                 userLine += products.join(', ') + ` (**${config.currency}${userTotal.toFixed(2)}**)`;
                 reply += userLine + '\n';
+                index++;
             }
 
             reply += '\n' + interaction.t('commands.orders.grand_total', { currency: config.currency, total: globalTotal.toFixed(2) });
-            await interaction.reply({ content: reply, ephemeral: true });
+            await interaction.reply({ content: reply, flags: MessageFlags.Ephemeral });
         }
     },
 };

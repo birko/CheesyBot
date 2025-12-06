@@ -51,9 +51,9 @@
                 "add": "Add products (supports bulk)",
                 "remove": "Remove products (supports bulk)",
                 "update": "Update product price (supports bulk)",
-                "orders": "View orders",
-                "complete": "Complete orders",
-                "status": "Update order status",
+                "orders": "View orders (shows indices)",
+                "complete": "Complete orders (by user or index)",
+                "status": "Update order status (by user or index)",
                 "language": "Set your preferred language"
             },
             "bulk_example": "**Bulk Input Example:** `Product:Amount, Product2:Amount2` (e.g., `Apple:5, Banana:10`)"

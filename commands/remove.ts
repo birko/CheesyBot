@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { isAdmin } from '../utils/auth';
 import productService from '../services/productService';
 import { parseBulkInput } from '../utils/parser';
@@ -14,7 +14,7 @@ module.exports = {
                 .setRequired(true)),
     async execute(interaction: ChatInputCommandInteraction) {
         if (!isAdmin(interaction)) {
-            await interaction.reply({ content: interaction.t('common.permission_denied'), ephemeral: true });
+            await interaction.reply({ content: interaction.t('common.permission_denied'), flags: MessageFlags.Ephemeral });
             return;
         }
 
@@ -53,7 +53,7 @@ module.exports = {
         if (removalFailed.length > 0) reply += interaction.t('commands.remove.failed_bulk_header') + ' ' + removalFailed.join(', ') + '\n';
         if (reply === '') reply = interaction.t('commands.remove.not_found', { input: productInput });
 
-        await interaction.reply({ content: reply, ephemeral: true });
+        await interaction.reply({ content: reply, flags: MessageFlags.Ephemeral });
     },
 };
 

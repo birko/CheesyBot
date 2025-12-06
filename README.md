@@ -110,11 +110,14 @@ npm test
 -   `/update <product> [new_price]`: Update product prices (by name or index).
     -   Single: `/update product:Apple new_price:2.0` OR `/update product:1 new_price:2.0`
     -   Bulk: `/update product:Apple:2.0, Banana:1.0`
--   `/orders [user]`: View all orders or orders for a specific user.
--   `/complete [product] [user] [amount]`: Complete orders (by name or index).
+-   `/orders [user]`: View all orders or orders for a specific user. Displays order indices for easy reference.
+-   `/complete [product] [user|index] [amount]`: Complete orders (by name or index).
     -   All Orders: `/complete`
-    -   User All: `/complete user:@User`
-    -   User Product All: `/complete user:@User product:Apple`
-    -   User Product All: `/complete user:@User product:Apple`
-    -   Specific Amount: `/complete user:@User product:Apple amount:5`
--   `/status <user> <status>`: Update order status (e.g., New, Processing, Completed).
+    -   User All: `/complete user:@User` OR `/complete index:1`
+    -   User Product All: `/complete user:@User product:Apple` OR `/complete index:1 product:Apple`
+    -   Specific Amount: `/complete user:@User product:Apple amount:5` OR `/complete index:1 product:Apple amount:5`
+-   `/status <status> <user|index>`: Update order status (e.g., New, Processing, Completed).
+    -   By User: `/status status:Processing user:@User`
+    -   By Index: `/status status:Completed index:1`
+
+**Note:** All command responses are ephemeral (visible only to you).

@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import config from '../config.json';
 import productService from '../services/productService';
 
@@ -11,7 +11,7 @@ module.exports = {
         const products = productService.getAllProducts();
 
         if (Object.keys(products).length === 0) {
-            await interaction.reply({ content: interaction.t('commands.list.no_products'), ephemeral: true });
+            await interaction.reply({ content: interaction.t('commands.list.no_products'), flags: MessageFlags.Ephemeral });
             return;
         }
 
@@ -22,7 +22,7 @@ module.exports = {
             index++;
         }
 
-        await interaction.reply({ content: reply, ephemeral: true });
+        await interaction.reply({ content: reply, flags: MessageFlags.Ephemeral });
     },
 };
 

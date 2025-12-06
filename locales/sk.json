@@ -51,9 +51,9 @@
                 "add": "Pridať produkty (podporuje hromadné operácie)",
                 "remove": "Odstrániť produkty (podporuje hromadné operácie)",
                 "update": "Aktualizovať cenu produktu (podporuje hromadné operácie)",
-                "orders": "Zobraziť objednávky",
-                "complete": "Dokončiť objednávky",
-                "status": "Aktualizovať stav objednávky",
+                "orders": "Zobraziť objednávky (zobrazuje indexy)",
+                "complete": "Dokončiť objednávky (podľa užívateľa alebo indexu)",
+                "status": "Aktualizovať stav objednávky (podľa užívateľa alebo indexu)",
                 "language": "Nastav si preferovaný jazyk"
             },
             "bulk_example": "**Príklad hromadného vstupu:** `Produkt:Množstvo, Produkt2:Množstvo2` (napr. `Jablko:5, Banán:10`)"

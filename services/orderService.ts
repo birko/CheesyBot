@@ -233,6 +233,21 @@ class OrderService {
     getAllOrders() {
         return orderRepository.getAllOrders();
     }
+
+    getSortedOrders(): [string, any][] {
+        const allOrders = this.getAllOrders();
+        return Object.entries(allOrders).sort(([, a], [, b]) => {
+            const dateA = new Date(a.lastChange || 0).getTime();
+            const dateB = new Date(b.lastChange || 0).getTime();
+            return dateB - dateA; // Descending (newest first)
+        });
+    }
+
+    getUserByIndex(index: number): string | null {
+        const sorted = this.getSortedOrders();
+        if (index < 1 || index > sorted.length) return null;
+        return sorted[index - 1][0]; // Return userId
+    }
 }
 
 export default new OrderService();
